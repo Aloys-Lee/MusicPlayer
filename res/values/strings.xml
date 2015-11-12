@@ -4,5 +4,10 @@
     <string name="app_name">MusicPlayerTest</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="music_name">山丘</string>
+    <string name="music_singer">李宗盛</string>
+    <string name="music_record">山丘</string>
+    <string name="music_cur_time">03:33</string>
+    <string name="music_end_time">03:42</string>
 
 </resources>

@@ -1,16 +1,128 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.musicplayertest.MainActivity" >
+    android:background="@color/background"
+    android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/music_name"
+        style="@style/textTitle"
+        android:layout_width="@dimen/x200"
+        android:layout_height="@dimen/y35"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/y12"
+        android:background="@color/text_grey21"
+        android:gravity="center"
+        android:text="@string/music_name" />
+
+    <ImageView
+        android:id="@+id/music_pic"
+        android:layout_width="@dimen/x160"
+        android:layout_height="@dimen/y120"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y18"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/widget_music_album_default" />
+
+    <TextView
+        android:id="@+id/music_singer"
+        style="@style/textSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_marginLeft="@dimen/x100"
+        android:layout_marginTop="@dimen/y15"
+        android:gravity="center"
+        android:text="@string/music_singer" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/music_record"
+        style="@style/textSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x100"
+        android:layout_marginTop="@dimen/y10"
+        android:gravity="center"
+        android:text="@string/music_record" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x40"
+        android:layout_marginRight="@dimen/x40"
+        android:layout_marginTop="@dimen/y20"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/music_cur_time"
+            style="@style/textSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/music_cur_time" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/y5"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/music_end_time"
+            style="@style/textSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/music_end_time" />
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/music_seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x40"
+        android:layout_marginRight="@dimen/x40"
+        android:layout_marginTop="@dimen/y6"
+        android:gravity="center" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/x40"
+        android:layout_marginRight="@dimen/x40"
+        android:layout_marginTop="@dimen/y10"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/music_pre"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/y30"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/widget_music_btn_pre_press" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/y5"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/music_pause"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/y30"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/widget_music_btn_play_press" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/y5"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/music_next"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/y30"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/widget_music_btn_next_press" />
+    </LinearLayout>
+
+</LinearLayout>
