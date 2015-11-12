@@ -32,29 +32,48 @@
             android:contentDescription="@string/app_name"
             android:src="@drawable/widget_music_album_default" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/y40"
-            android:layout_marginRight="@dimen/y40"
-            android:layout_marginTop="@dimen/y25"
-            android:orientation="vertical" >
+            android:layout_marginTop="@dimen/x25" >
+
+            <TextView
+                android:id="@+id/singer"
+                style="@style/textSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/singer" />
 
             <TextView
                 android:id="@+id/music_singer"
                 style="@style/textSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/singer"
                 android:text="@string/music_singer" />
+
+            <TextView
+                android:id="@+id/record"
+                style="@style/textSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/singer"
+                android:layout_marginTop="@dimen/x10"
+                android:gravity="center"
+                android:text="@string/record" />
 
             <TextView
                 android:id="@+id/music_record"
                 style="@style/textSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/x15"
+                android:layout_below="@id/singer"
+                android:layout_marginTop="@dimen/x10"
+                android:layout_toRightOf="@id/record"
                 android:text="@string/music_record" />
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -78,8 +97,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:orientation="horizontal"
             android:layout_weight="1"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/y20"
             android:paddingRight="@dimen/y20" >
 
