@@ -1,16 +1,24 @@
 package com.example.musicplayertest;
 
+import java.util.List;
+
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.musicplayertest.PlayServices.MusicBinder;
+
 public class MainActivity extends Activity implements OnClickListener {
-	private TextView music_name; // ×îºóÓÃspinner»òÕßÆäËûÌæ»»£¬ÐèÌÖÂÛ
+	private TextView music_name; // ï¿½ï¿½ï¿½ï¿½ï¿½spinnerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ»»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private ImageView music_pic;
 	private TextView music_singer;
 	private TextView music_record;
@@ -19,6 +27,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ImageView music_pre;
 	private ImageView music_next;
 	private ImageView music_pause_paly;
+	//music service
+	private PlayServices playServices;
+	private boolean isBound = false;
+	//music data
+	private List<AudioData> musicList;
 
 	private boolean isPlayed;// palying music
 
@@ -29,6 +42,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		init();
 		isPlayed = false;
+		//start service
+		Intent intent = new Intent(this, PlayServices.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        getData();
 	}
 
 	private void init() {
@@ -47,24 +64,32 @@ public class MainActivity extends Activity implements OnClickListener {
 		music_pre.setOnClickListener(this);
 		music_pause_paly.setOnClickListener(this);
 	}
+	//get music data
+	private void getData(){
+		DataPri dataPri=DataPri.getInstance();
+		musicList = dataPri.getAudioList(MainActivity.this);
+	}
 
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.music_name:
-			Toast.makeText(this, "µã»÷ÁË¸èÃû£¬ÏÔÊ¾¸èÇúÁÐ±í", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ï¿½ï¿½ï¿½ï¿½Ë¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½", Toast.LENGTH_SHORT).show();
 			showMusicList();
 			break;
 		case R.id.music_pre:
-			Toast.makeText(this, "µã»÷ÁËÉÏÒ»Ê×", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 			switchToPre();
 			break;
 		case R.id.music_next:
-			Toast.makeText(this, "µã»÷ÁËÏÂÒ»Ê×", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 			switchToNext();
 			break;
 		case R.id.music_pause:
+			//test play music
+			if(musicList.size()>0)
+				playServices.play(musicList.get(0));
 			switchPlayOrPause();
 			controlMusic();
 			break;
@@ -99,13 +124,38 @@ public class MainActivity extends Activity implements OnClickListener {
 			isPlayed = false;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_play_press);
-			Toast.makeText(this, "µã»÷ÁËÔÝÍ£", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£", Toast.LENGTH_SHORT).show();
 		} else {
 			isPlayed = true;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_pause_press);
-			Toast.makeText(this, "µã»÷ÁË²¥·Å", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 		}
 
 	}
+	
+	//bind service call back
+	private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service){
+        	MusicBinder binder = (MusicBinder) service;
+        	playServices = binder.getServices();
+        	isBound = true;
+        	System.out.println(playServices.testConnection());
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
+        }
+    };
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isBound) {
+            unbindService(mConnection);
+            isBound = false;
+        }
+    }
 }
