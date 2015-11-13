@@ -1,5 +1,7 @@
 package com.example.musicplayertest;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -7,9 +9,11 @@ import android.support.v4.view.ViewPager.LayoutParams;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -31,36 +35,41 @@ public class MusicListPop extends PopupWindow {
 
 	private TextView tvTitle;
 
-	private TextView tvMusicNums;
+	private TextView tvMusicListNums;
 
-	private BaseAdapter adapter;
+	public BaseAdapter adapter;
+
+	private int lastSelectPosition;
 
 	public MusicListPop(Activity context1,
-			OnItemClickListener onItemClickListener1, BaseAdapter adapter1) {
+			OnItemClickListener onItemClickListener1, int lastSelectPosition1,
+			List<AudioData> data1) {
 		super(context1);
 
 		this.onItemClickListener = onItemClickListener1;
 
 		this.context = context1;
 
-		this.adapter = adapter1;
+		this.adapter = new MyAdapter(context1, data1);
+
+		this.lastSelectPosition = lastSelectPosition1;
 
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mMenuView = inflater.inflate(R.layout.music_list, null);
 
-		int musicNums = adapter1.getCount();
-
 		listView = (ListView) mMenuView.findViewById(R.id.list);
 
 		tvTitle = (TextView) mMenuView.findViewById(R.id.music_list_title);
 
-		tvMusicNums = (TextView) mMenuView.findViewById(R.id.music_list_nums);
+		tvMusicListNums = (TextView) mMenuView
+				.findViewById(R.id.music_list_nums);
 
-		tvMusicNums.setText("(" + musicNums + "首)");
+		tvMusicListNums.setText("(" + data1.size() + "首)");
 
 		listView.setAdapter(adapter);
 
+		listView.setSelectionFromTop(lastSelectPosition, 0);
 		// listView.setOnItemSelectedListener(itemSelectedListener);
 
 		listView.setOnItemClickListener(onItemClickListener1);
@@ -105,6 +114,104 @@ public class MusicListPop extends PopupWindow {
 			int mScreenHeigh = dm.heightPixels;
 			return mScreenHeigh;
 		}
+	}
+
+	private class MyAdapter extends BaseAdapter {
+
+		private Context context;
+
+		private List<AudioData> data;
+
+		public MyAdapter(Context context1, List<AudioData> data1) {
+
+			this.context = context1;
+
+			this.data = data1;
+
+		}
+
+		@Override
+		public int getCount() {
+			return data.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return data.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public final class ViewHolder {
+
+			ImageView itemImg;
+
+			TextView itemtitle;
+
+			TextView itemName;
+
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			ViewHolder viewHolder = null;
+
+			if (convertView == null) {
+				viewHolder = new ViewHolder();
+
+				convertView = LayoutInflater.from(context).inflate(
+						R.layout.menu_item, null);
+
+				viewHolder.itemImg = (ImageView) convertView
+						.findViewById(R.id.music_item_img);
+				viewHolder.itemtitle = (TextView) convertView
+						.findViewById(R.id.music_item_title);
+				viewHolder.itemName = (TextView) convertView
+						.findViewById(R.id.music_item_name);
+
+				convertView.setTag(viewHolder);
+
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+
+			AudioData audioData = data.get(position);
+			int musicId = audioData.getId();
+			int albumId = audioData.getAlbumId();
+
+			String musicTitle = audioData.getTitle();
+			String musicArtist = " - " + audioData.getArtist();
+			// Bitmap musicPic = dataPri.getArtwork(MainActivity.this, musicId,
+			// albumId, true);
+
+			viewHolder.itemName.setText(musicArtist);
+			viewHolder.itemtitle.setText(musicTitle);
+			if (lastSelectPosition == position) {
+				viewHolder.itemName.setTextColor(context.getResources()
+						.getColor(R.color.green));
+				viewHolder.itemtitle.setTextColor(context.getResources()
+						.getColor(R.color.green));
+			} else {
+				viewHolder.itemName.setTextColor(context.getResources()
+						.getColor(R.color.grey));
+				viewHolder.itemtitle.setTextColor(context.getResources()
+						.getColor(R.color.white));
+			}
+
+			// viewHolder.itemImg.setImageBitmap(musicPic);
+
+			return convertView;
+		}
+	}
+
+	public interface ItemOnclick {
+
+		public void changeClick(int position);
+
 	}
 
 }

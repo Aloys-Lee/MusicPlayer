@@ -50,10 +50,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	// music popwindow
 	private MusicListPop menuWindow;
-	private MyAdapter adapter;
 	private List<AudioData> musicData;
 	private DataPri dataPri;
-
+	private int lastSelectPosition;
 	// music service
 	private PlayServices playServices;
 	private boolean isBound = false;
@@ -62,7 +61,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	private int currentPosition = 0;
 
 	private boolean isPlayed;// palying music
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -105,7 +103,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		musicData = dataPri.getAudioList(MainActivity.this);
 
-		adapter = new MyAdapter(MainActivity.this, musicData);
 
 	}
 
@@ -184,12 +181,15 @@ public class MainActivity extends Activity implements OnClickListener {
 			menuWindow = new MusicListPop(MainActivity.this,
 					new OnItemClickListener() {
 
-						@Override
-						public void onItemClick(AdapterView<?> arg0, View arg1,
-								int arg2, long arg3) {
-							System.out.println("点击了没有");
-						}
-					}, adapter);
+				@Override
+				public void onItemClick(AdapterView<?> arg0,
+						View arg1, int position, long arg3) {
+
+					System.out.println("点击了没有");
+					//记录最后一次点击的歌曲位置
+					lastSelectPosition = position;
+				}
+			}, lastSelectPosition, musicData);
 			// 显示窗口
 			menuWindow.showAtLocation(
 					MainActivity.this.findViewById(R.id.main), Gravity.BOTTOM
@@ -289,84 +289,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private class MyAdapter extends BaseAdapter {
-
-		private Context context;
-
-		private List<AudioData> data;
-
-		public MyAdapter(Context context1, List<AudioData> data1) {
-
-			this.context = context1;
-
-			this.data = data1;
-
-		}
-
-		@Override
-		public int getCount() {
-			return data.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return data.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		public final class ViewHolder {
-
-			ImageView itemImg;
-
-			TextView itemtitle;
-
-			TextView itemName;
-
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			ViewHolder viewHolder = null;
-
-			if (convertView == null) {
-				viewHolder = new ViewHolder();
-
-				convertView = LayoutInflater.from(context).inflate(
-						R.layout.menu_item, null);
-
-				viewHolder.itemImg = (ImageView) convertView
-						.findViewById(R.id.music_item_img);
-				viewHolder.itemtitle = (TextView) convertView
-						.findViewById(R.id.music_item_title);
-				viewHolder.itemName = (TextView) convertView
-						.findViewById(R.id.music_item_name);
-
-				convertView.setTag(viewHolder);
-
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-
-			AudioData audioData = data.get(position);
-			int musicId = audioData.getId();
-			int albumId = audioData.getAlbumId();
-
-			String musicTitle = audioData.getTitle();
-			String musicArtist = " - " + audioData.getArtist();
-			// Bitmap musicPic = dataPri.getArtwork(MainActivity.this, musicId,
-			// albumId, true);
-
-			viewHolder.itemName.setText(musicArtist);
-			viewHolder.itemtitle.setText(musicTitle);
-//			viewHolder.itemImg.setImageBitmap(musicPic);
-
-			return convertView;
-		}
-	}
+	
 
 }
