@@ -5,16 +5,33 @@
     android:background="@color/background"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/music_name"
-        style="@style/textTitle"
-        android:layout_width="@dimen/x200"
-        android:layout_height="@dimen/y30"
-        android:layout_gravity="center"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/y12"
-        android:background="@color/text_grey21"
-        android:gravity="center"
-        android:text="@string/music_name" />
+         >
+
+        <TextView
+            android:id="@+id/music_name"
+            style="@style/textTitle"
+            android:layout_width="@dimen/x200"
+            android:layout_height="@dimen/y30"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/music_name" />
+
+        <ImageButton
+            android:id="@+id/music_list"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/y30"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_toRightOf="@id/music_name"
+            android:contentDescription="@string/app_name"
+            android:gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/widget_music_btn_next_press" />
+    </RelativeLayout>
 
  		<RelativeLayout
         android:layout_width="fill_parent"
