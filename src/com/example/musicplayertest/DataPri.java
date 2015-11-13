@@ -98,8 +98,8 @@ public class DataPri {
 	 * @param album_id
 	 *            专辑id
 	 * @param allowdefault
-	 *            没找到是否允许传回默认图片.
-	 * @return .bitmap专辑图片。null表示没找到图片。
+	 *            没找到的话，是否允许传回默认图片。
+	 * @return  返回.bitmap专辑图片。默认为false的话，null表示没找到图片。
 	 */
 	public Bitmap getArtwork(Context context, long song_id, long album_id,  
             boolean allowdefault) {  
