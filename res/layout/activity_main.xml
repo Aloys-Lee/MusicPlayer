@@ -30,7 +30,7 @@
             android:contentDescription="@string/app_name"
             android:gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/widget_music_btn_next_press" />
+            android:src="@drawable/ic_music_list" />
     </RelativeLayout>
 
  		<RelativeLayout

@@ -16,20 +16,20 @@
             android:layout_width="@dimen/y300"
             android:layout_height="@dimen/x25"
             android:layout_gravity="center"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:text="@string/music_name" />
 
         <ImageButton
             android:id="@+id/music_list"
             android:layout_width="@dimen/y30"
-            android:layout_height="@dimen/x30"
+            android:layout_height="@dimen/x36"
             android:layout_marginLeft="@dimen/x10"
             android:layout_toRightOf="@id/music_name"
             android:contentDescription="@string/app_name"
             android:layout_centerInParent="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/widget_music_btn_next_press" />
+            android:src="@drawable/ic_music_list" />
     </RelativeLayout>
 
     <LinearLayout
