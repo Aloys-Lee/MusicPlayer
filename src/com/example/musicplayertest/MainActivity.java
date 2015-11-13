@@ -36,16 +36,16 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ImageView music_pre;
 	private ImageView music_next;
 	private ImageView music_pause_paly;
-	
+
 	private ImageView albumCD;
 	private RoundImageView albumpicture;
-	ObjectAnimator animator=null , animator1=null;
+	ObjectAnimator animator = null, animator1 = null;
 	private float currentValue = 0f;
-	
-	//music service
+
+	// music service
 	private PlayServices playServices;
 	private boolean isBound = false;
-	//music data
+	// music data
 	private List<AudioData> musicList;
 
 	private boolean isPlayed;// palying music
@@ -57,13 +57,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		init();
 		isPlayed = false;
-		//start service
+		// start service
 		Intent intent = new Intent(this, PlayServices.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        getData();
-        
-        //初始化界面信息
-        initUI(0);
+		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		getData();
+
+		// 初始化界面信息
+		initUI(0);
 	}
 
 	private void init() {
@@ -76,59 +76,64 @@ public class MainActivity extends Activity implements OnClickListener {
 		music_pre = (ImageView) findViewById(R.id.music_pre);
 		music_next = (ImageView) findViewById(R.id.music_next);
 		music_pause_paly = (ImageView) findViewById(R.id.music_pause);
-<<<<<<< HEAD
 		music_list = (ImageButton) findViewById(R.id.music_list);
 
-=======
-		
-		albumCD = (ImageView)findViewById(R.id.music_pic);
-		albumpicture = (RoundImageView)findViewById(R.id.music_people);
-		
->>>>>>> 600ac1372600d751c1d9b2857746de3055f2d533
+		albumCD = (ImageView) findViewById(R.id.music_pic);
+		albumpicture = (RoundImageView) findViewById(R.id.music_people);
+
 		music_name.setOnClickListener(this);
 		music_next.setOnClickListener(this);
 		music_pre.setOnClickListener(this);
 		music_pause_paly.setOnClickListener(this);
 		music_list.setOnClickListener(this);
 	}
-	
-	
-	private void initAlbum(){
-		animator = ObjectAnimator.ofFloat(albumCD, "Rotation", currentValue-360,currentValue).setDuration(20000);
+
+	private void initAlbum() {
+		animator = ObjectAnimator.ofFloat(albumCD, "Rotation",
+				currentValue - 360, currentValue).setDuration(20000);
 		animator.setRepeatCount(ObjectAnimator.INFINITE);
 		animator.setInterpolator(null);
-		
-		animator1 = ObjectAnimator.ofFloat(albumpicture, "Rotation", currentValue-360,currentValue).setDuration(20000);
+
+		animator1 = ObjectAnimator.ofFloat(albumpicture, "Rotation",
+				currentValue - 360, currentValue).setDuration(20000);
 		animator1.setRepeatCount(ObjectAnimator.INFINITE);
 		animator1.setInterpolator(null);
-		
+
 		animator.addUpdateListener(new AnimatorUpdateListener() {
-			
+
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation) {
 				// TODO Auto-generated method stub
-				currentValue = (Float)animation.getAnimatedValue();
+				currentValue = (Float) animation.getAnimatedValue();
 			}
-		});	
+		});
 	}
-	private void initUI(int i){
-		
+
+	private void initUI(int i) {
+
 		music_name.setText(musicList.get(0).getTitle());
 		music_singer.setText(musicList.get(0).getArtist());
 		music_record.setText(musicList.get(0).getArtistKey());
-		
-		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(0).getId(), musicList.get(0).getAlbumId(), false, false);
-		if (bm != null){
+
+		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(0).getId(),
+				musicList.get(0).getAlbumId(), false, false);
+		if (bm != null) {
 			albumpicture.setImageBitmap(bm);
-		}else{
-			Toast.makeText(MainActivity.this, "bm = null"+musicList.size()+musicList.get(0).getTitle()+musicList.get(0).getTitle()+musicList.get(0).getAlbum(), Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(
+					MainActivity.this,
+					"bm = null" + musicList.size()
+							+ musicList.get(0).getTitle()
+							+ musicList.get(0).getTitle()
+							+ musicList.get(0).getAlbum(), Toast.LENGTH_SHORT)
+					.show();
 		}
-		
+
 	}
-	
-	//get music data
-	private void getData(){
-		DataPri dataPri=DataPri.getInstance();
+
+	// get music data
+	private void getData() {
+		DataPri dataPri = DataPri.getInstance();
 		musicList = dataPri.getAudioList(MainActivity.this);
 	}
 
@@ -147,34 +152,29 @@ public class MainActivity extends Activity implements OnClickListener {
 		case R.id.music_next:
 			Toast.makeText(this, "点击了下一首", Toast.LENGTH_SHORT).show();
 			switchToNext();
-			
+
 			break;
 		case R.id.music_pause:
-			
-			//test play music	
-			if(musicList.size()>0)
+
+			// test play music
+			if (musicList.size() > 0)
 				playServices.play(musicList.get(0));
-				
-				switchPlayOrPause();
-				controlMusic();
-				
-			
+
+			switchPlayOrPause();
+			controlMusic();
+
 			break;
-<<<<<<< HEAD
 		case R.id.music_list:
 			showMusicList();
 			break;
 
-=======
->>>>>>> 600ac1372600d751c1d9b2857746de3055f2d533
 		default:
 			break;
 		}
 	}
 
 	/**
-	 * @author lixi
-	 * 控制音乐暂停或播放
+	 * @author lixi 控制音乐暂停或播放
 	 */
 	private void controlMusic() {
 		// TODO Auto-generated method stub
@@ -182,35 +182,31 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * @author lixi
-	 * 播放下一首音乐
+	 * @author lixi 播放下一首音乐
 	 */
 	private void switchToNext() {
 		// TODO Auto-generated method stub
-		//停止播放
+		// 停止播放
 		animator.end();
 		animator1.end();
 		currentValue = 0;
-		
-		
+
 	}
 
 	/**
-	 * @author lixi
-	 * 播放上一首音乐
+	 * @author lixi 播放上一首音乐
 	 */
 	private void switchToPre() {
 		// TODO Auto-generated method stub
-		
-		//停止播放动画
+
+		// 停止播放动画
 		animator.end();
 		animator1.end();
 		currentValue = 0;
 	}
 
 	/**
-	 * @author lixi
-	 * 播放或暂停按钮图片切换
+	 * @author lixi 播放或暂停按钮图片切换
 	 */
 	private void showMusicList() {
 		// TODO Auto-generated method stub
@@ -218,64 +214,54 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * @author lixi
-	 * 播放或暂停按钮图片切换
+	 * @author lixi 播放或暂停按钮图片切换
 	 */
 	private void switchPlayOrPause() {
 		if (isPlayed) {
 			isPlayed = false;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_play_press);
-<<<<<<< HEAD
 			Toast.makeText(this, "点击了暂停", Toast.LENGTH_SHORT).show();
 
-=======
-			Toast.makeText(this, "�������ͣ", Toast.LENGTH_SHORT).show();
-			
 			animator.cancel();
 			animator1.cancel();
-			
->>>>>>> 600ac1372600d751c1d9b2857746de3055f2d533
+
 		} else {
 			isPlayed = true;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_pause_press);
-<<<<<<< HEAD
 			Toast.makeText(this, "点击了播放", Toast.LENGTH_SHORT).show();
-=======
-			Toast.makeText(this, "����˲���", Toast.LENGTH_SHORT).show();
-			
+
 			initAlbum();
 			animator.start();
 			animator1.start();
-			
->>>>>>> 600ac1372600d751c1d9b2857746de3055f2d533
+
 		}
 
 	}
-	
-	//bind service call back
-	private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service){
-        	MusicBinder binder = (MusicBinder) service;
-        	playServices = binder.getServices();
-        	isBound = true;
-        	System.out.println(playServices.testConnection());
-        }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            isBound = false;
-        }
-    };
-    
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (isBound) {
-            unbindService(mConnection);
-            isBound = false;
-        }
-    }
+	// bind service call back
+	private ServiceConnection mConnection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			MusicBinder binder = (MusicBinder) service;
+			playServices = binder.getServices();
+			isBound = true;
+			System.out.println(playServices.testConnection());
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			isBound = false;
+		}
+	};
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (isBound) {
+			unbindService(mConnection);
+			isBound = false;
+		}
+	}
 }
