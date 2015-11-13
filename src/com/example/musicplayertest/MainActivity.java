@@ -109,7 +109,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		music_singer.setText(musicList.get(0).getArtist());
 		music_record.setText(musicList.get(0).getArtistKey());
 		
-		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(0).getId(), musicList.get(0).getAlbumId(), false, false);
+		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(1).getId(), musicList.get(1).getAlbumId(),false);
 		if (bm != null){
 			albumpicture.setImageBitmap(bm);
 		}else{
@@ -129,15 +129,15 @@ public class MainActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.music_name:
-			Toast.makeText(this, "����˸�������ʾ�����б�", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "歌曲名字", Toast.LENGTH_SHORT).show();
 			showMusicList();
 			break;
 		case R.id.music_pre:
-			Toast.makeText(this, "�������һ��", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "上", Toast.LENGTH_SHORT).show();
 			switchToPre();
 			break;
 		case R.id.music_next:
-			Toast.makeText(this, "�������һ��", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "下", Toast.LENGTH_SHORT).show();
 			switchToNext();
 			
 			break;
@@ -191,7 +191,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			isPlayed = false;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_play_press);
-			Toast.makeText(this, "�������ͣ", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "暂停", Toast.LENGTH_SHORT).show();
 			
 			animator.cancel();
 			animator1.cancel();
@@ -200,7 +200,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			isPlayed = true;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_pause_press);
-			Toast.makeText(this, "����˲���", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "开始", Toast.LENGTH_SHORT).show();
 			
 			initAlbum();
 			animator.start();

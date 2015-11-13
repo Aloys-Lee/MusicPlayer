@@ -26,189 +26,14 @@ import android.util.Log;
 
 public class MediaUtil {
   
-  //»ñÈ¡×¨¼­·âÃæµÄUri
+  ////è·å–ä¸“è¾‘å°é¢çš„Uri
   private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
 
   static String TAG = "MediaUtil";
+  
+
   /**
-   * ÓÃÓÚ´ÓÊı¾İ¿âÖĞ²éÑ¯¸èÇúµÄĞÅÏ¢£¬±£´æÔÚListµ±ÖĞ
-   * 
-   * @return
-   */
-  public static List<Mp3Info> getMp3Infos(Context context) {
-	  	Cursor cursor = context.getContentResolver().query(
-        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
-        MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-    
-    List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();
-    
-    for (int i = 0; i < cursor.getCount(); i++) {
-      cursor.moveToNext();
-      Mp3Info mp3Info = new Mp3Info();
-      
-      long id = cursor.getLong(cursor
-          .getColumnIndex(MediaStore.Audio.Media._ID));	//ÒôÀÖid
-      
-      String title = cursor.getString((cursor	
-          .getColumnIndex(MediaStore.Audio.Media.TITLE))); // ÒôÀÖ±êÌâ
-      
-      String artist = cursor.getString(cursor
-          .getColumnIndex(MediaStore.Audio.Media.ARTIST)); // ÒÕÊõ¼Ò
-      
-      String album = cursor.getString(cursor
-          .getColumnIndex(MediaStore.Audio.Media.ALBUM));	//×¨¼­
-      
-      long albumId = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-      
-      long duration = cursor.getLong(cursor
-          .getColumnIndex(MediaStore.Audio.Media.DURATION)); // Ê±³¤
-      
-      long size = cursor.getLong(cursor
-          .getColumnIndex(MediaStore.Audio.Media.SIZE)); // ÎÄ¼ş´óĞ¡
-      
-      String url = cursor.getString(cursor
-          .getColumnIndex(MediaStore.Audio.Media.DATA)); // ÎÄ¼şÂ·¾¶
-      
-      int isMusic = cursor.getInt(cursor
-          .getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)); // ÊÇ·ñÎªÒôÀÖ
-      
-      if (isMusic != 0) { // Ö»°ÑÒôÀÖÌí¼Óµ½¼¯ºÏµ±ÖĞ
-        mp3Info.setId(id);
-        mp3Info.setTitle(title);
-        mp3Info.setArtist(artist);
-        mp3Info.setAlbum(album);
-        mp3Info.setAlbumId(albumId);
-        mp3Info.setDuration(duration);
-        mp3Info.setSize(size);
-        mp3Info.setUrl(url);
-        mp3Infos.add(mp3Info);
-      }
-    }
-    return mp3Infos;
-  }
-  
-  /**
-   * ÍùList¼¯ºÏÖĞÌí¼ÓMap¶ÔÏóÊı¾İ£¬Ã¿Ò»¸öMap¶ÔÏó´æ·ÅÒ»Ê×ÒôÀÖµÄËùÓĞÊôĞÔ
-   * @param mp3Infos
-   * @return
-   */
-  public static List<HashMap<String, String>> getMusicMaps(
-      List<Mp3Info> mp3Infos) {
-    List<HashMap<String, String>> mp3list = new ArrayList<HashMap<String, String>>();
-    for (Iterator iterator = mp3Infos.iterator(); iterator.hasNext();) {
-      Mp3Info mp3Info = (Mp3Info) iterator.next();
-      HashMap<String, String> map = new HashMap<String, String>();
-      map.put("title", mp3Info.getTitle());
-      map.put("Artist", mp3Info.getArtist());
-      map.put("album", mp3Info.getAlbum());
-      map.put("albumId", String.valueOf(mp3Info.getAlbumId()));
-      map.put("duration", formatTime(mp3Info.getDuration()));
-      map.put("size", String.valueOf(mp3Info.getSize()));
-      map.put("url", mp3Info.getUrl());
-      mp3list.add(map);
-    }
-    return mp3list;
-  }
-  
-  /**
-   * ¸ñÊ½»¯Ê±¼ä£¬½«ºÁÃë×ª»»Îª·Ö:Ãë¸ñÊ½
-   * @param time
-   * @return
-   */
-  public static String formatTime(long time) {
-    String min = time / (1000 * 60) + "";
-    String sec = time % (1000 * 60) + "";
-    if (min.length() < 2) {
-      min = "0" + time / (1000 * 60) + "";
-    } else {
-      min = time / (1000 * 60) + "";
-    }
-    if (sec.length() == 4) {
-      sec = "0" + (time % (1000 * 60)) + "";
-    } else if (sec.length() == 3) {
-      sec = "00" + (time % (1000 * 60)) + "";
-    } else if (sec.length() == 2) {
-      sec = "000" + (time % (1000 * 60)) + "";
-    } else if (sec.length() == 1) {
-      sec = "0000" + (time % (1000 * 60)) + "";
-    }
-    return min + ":" + sec.trim().substring(0, 2);
-  }
-  
-  
-  /**
-   * »ñÈ¡Ä¬ÈÏ×¨¼­Í¼Æ¬
-   * @param context
-   * @return
-   */
-  public static Bitmap getDefaultArtwork(Context context,boolean small) {
-    BitmapFactory.Options opts = new BitmapFactory.Options();
-    opts.inPreferredConfig = Bitmap.Config.RGB_565;
-    if(small){	//·µ»ØĞ¡Í¼Æ¬
-     // return BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.small), null, opts);
-    	return null	;		
-    }
-    //  return BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.), null, opts);
-    	return null;
-  }
-  
-  
-  /**
-   * ´ÓÎÄ¼şµ±ÖĞ»ñÈ¡×¨¼­·âÃæÎ»Í¼
-   * @param context
-   * @param songid
-   * @param albumid
-   * @return
-   */
-  private static Bitmap getArtworkFromFile(Context context, long songid, long albumid){
-    Bitmap bm = null;
-    if(albumid < 0 && songid < 0) {
-      throw new IllegalArgumentException("Must specify an album or a song id");
-    }
-    try {
-      BitmapFactory.Options options = new BitmapFactory.Options();
-      FileDescriptor fd = null;
-      if(albumid < 0){
-        Uri uri = Uri.parse("content://media/external/audio/media/"
-            + songid + "/albumart");
-        ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
-        if(pfd != null) {
-          fd = pfd.getFileDescriptor();
-        }
-      } else {
-        Uri uri = ContentUris.withAppendedId(albumArtUri, albumid);
-        ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
-        if(pfd != null) {
-          fd = pfd.getFileDescriptor();
-        }
-      }
-      options.inSampleSize = 1;
-      // Ö»½øĞĞ´óĞ¡ÅĞ¶Ï
-      options.inJustDecodeBounds = true;
-      // µ÷ÓÃ´Ë·½·¨µÃµ½optionsµÃµ½Í¼Æ¬´óĞ¡
-      BitmapFactory.decodeFileDescriptor(fd, null, options);
-      // ÎÒÃÇµÄÄ¿±êÊÇÔÚ800pixelµÄ»­ÃæÉÏÏÔÊ¾
-      // ËùÒÔĞèÒªµ÷ÓÃcomputeSampleSizeµÃµ½Í¼Æ¬Ëõ·ÅµÄ±ÈÀı
-      options.inSampleSize = 100;
-      // ÎÒÃÇµÃµ½ÁËËõ·ÅµÄ±ÈÀı£¬ÏÖÔÚ¿ªÊ¼ÕıÊ½¶ÁÈëBitmapÊı¾İ
-      options.inJustDecodeBounds = false;
-      options.inDither = false;
-      options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-      
-      //¸ù¾İoptions²ÎÊı£¬¼õÉÙËùĞèÒªµÄÄÚ´æ
-      bm = BitmapFactory.decodeFileDescriptor(fd, null, options);
-      
-      
-      
-      
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    return bm;
-  }
-  
-  /**
-   * »ñÈ¡×¨¼­·âÃæÎ»Í¼¶ÔÏó
+   * è·å–ä¸“è¾‘å›¾ç‰‡
    * @param context
    * @param song_id
    * @param album_id
@@ -216,21 +41,8 @@ public class MediaUtil {
    * @return
    */
 
-  public static Bitmap getArtwork(Context context, long song_id, long album_id, boolean allowdefalut, boolean small){
-    if(album_id < 0) {
-      if(song_id < 0) {
-        Bitmap bm = getArtworkFromFile(context, song_id, -1);
-        if(bm != null) {
-        	Log.i(TAG, "bm != null");
-          return bm;
-        }
-      }
-      if(allowdefalut) {
-    	  Log.i(TAG, "allowdefalut");
-        return getDefaultArtwork(context, small);
-      }
-      return null;
-    }
+  public static Bitmap getArtwork(Context context, long song_id, long album_id,  boolean small){
+    
     ContentResolver res = context.getContentResolver();
     Uri uri = ContentUris.withAppendedId(albumArtUri, album_id);
     if(uri != null) {
@@ -238,20 +50,20 @@ public class MediaUtil {
       try {
         in = res.openInputStream(uri);
         BitmapFactory.Options options = new BitmapFactory.Options();
-        //ÏÈÖÆ¶¨Ô­Ê¼´óĞ¡
+        //å…ˆåˆ¶å®šåŸå§‹å¤§å°
         options.inSampleSize = 1;
-        //Ö»½øĞĞ´óĞ¡ÅĞ¶Ï
+        //åªè¿›è¡Œå¤§å°åˆ¤æ–­
         options.inJustDecodeBounds = true;
-        //µ÷ÓÃ´Ë·½·¨µÃµ½optionsµÃµ½Í¼Æ¬µÄ´óĞ¡
+        //è°ƒç”¨æ­¤æ–¹æ³•å¾—åˆ°optionså¾—åˆ°å›¾ç‰‡çš„å¤§å°
         BitmapFactory.decodeStream(in, null, options);
-        /** ÎÒÃÇµÄÄ¿±êÊÇÔÚÄãN pixelµÄ»­ÃæÉÏÏÔÊ¾¡£ ËùÒÔĞèÒªµ÷ÓÃcomputeSampleSizeµÃµ½Í¼Æ¬Ëõ·ÅµÄ±ÈÀı **/
-        /** ÕâÀïµÄtargetÎª800ÊÇ¸ù¾İÄ¬ÈÏ×¨¼­Í¼Æ¬´óĞ¡¾ö¶¨µÄ£¬800Ö»ÊÇ²âÊÔÊı×Öµ«ÊÇÊÔÑéºó·¢ÏÖÍêÃÀµÄ½áºÏ **/
+        /** æˆ‘ä»¬çš„ç›®æ ‡æ˜¯åœ¨ä½ N pixelçš„ç”»é¢ä¸Šæ˜¾ç¤ºã€‚ æ‰€ä»¥éœ€è¦è°ƒç”¨computeSampleSizeå¾—åˆ°å›¾ç‰‡ç¼©æ”¾çš„æ¯”ä¾‹ **/
+        /** è¿™é‡Œçš„targetä¸º800æ˜¯æ ¹æ®é»˜è®¤ä¸“è¾‘å›¾ç‰‡å¤§å°å†³å®šçš„ï¼Œ800åªæ˜¯æµ‹è¯•æ•°å­—ä½†æ˜¯è¯•éªŒåå‘ç°å®Œç¾çš„ç»“åˆ **/
         if(small){
           options.inSampleSize = computeSampleSize(options, 40);
         } else{
           options.inSampleSize = computeSampleSize(options, 600);
         }
-        // ÎÒÃÇµÃµ½ÁËËõ·Å±ÈÀı£¬ÏÖÔÚ¿ªÊ¼ÕıÊ½¶ÁÈëBitmapÊı¾İ
+        // æˆ‘ä»¬å¾—åˆ°äº†ç¼©æ”¾æ¯”ä¾‹ï¼Œç°åœ¨å¼€å§‹æ­£å¼è¯»å…¥Bitmapæ•°æ®
         options.inJustDecodeBounds = false;
         options.inDither = false;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -261,18 +73,7 @@ public class MediaUtil {
         
         
       } catch (FileNotFoundException e) {
-        Bitmap bm = getArtworkFromFile(context, song_id, album_id);
-        if(bm != null) {
-          if(bm.getConfig() == null) {
-            bm = bm.copy(Bitmap.Config.RGB_565, false);
-            if(bm == null && allowdefalut) {
-              return getDefaultArtwork(context, small);
-            }
-          }
-        } else if(allowdefalut) {
-          bm = getDefaultArtwork(context, small);
-        }
-        return bm;
+       
       } finally {
         try {
           if(in != null) {
@@ -287,7 +88,7 @@ public class MediaUtil {
   }
 
   /**
-   * ¶ÔÍ¼Æ¬½øĞĞºÏÊÊµÄËõ·Å
+   * å¯¹å›¾ç‰‡è¿›è¡Œåˆé€‚çš„ç¼©æ”¾
    * @param options
    * @param target
    * @return
@@ -313,11 +114,5 @@ public class MediaUtil {
     }
     return candidate;
   }
-  
-  
-  public static void showRolate(){
-	  
-  }
-  
-  
+
 }
