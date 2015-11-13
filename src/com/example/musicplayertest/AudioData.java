@@ -151,7 +151,10 @@ public class AudioData {
 		public String getAlbum () {
 			return mAlbum;
 		}
-		
+		/**
+		 * 获得歌曲的专辑ID
+		 * @return
+		 */
 		public int getAlbumId () {
 			return mAlbumId;
 		}
