@@ -50,9 +50,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	// music popwindow
 	private MusicListPop menuWindow;
-	private List<AudioData> musicData;
-	private DataPri dataPri;
-	private int lastSelectPosition;
+
 	// music service
 	private PlayServices playServices;
 	private boolean isBound = false;
@@ -66,15 +64,38 @@ public class MainActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		getData();
 		init();
 		isPlayed = false;
 		// start service
 		Intent intent = new Intent(this, PlayServices.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-		getData();
 
 		// 初始化界面信息
 		initUI(currentPosition);
+	}
+	
+	//init popwindow
+	public void initPopWindow(){
+		menuWindow = new MusicListPop(MainActivity.this,
+				new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0,
+					View arg1, int position, long arg3) {
+
+				System.out.println("点击了没有");
+				//记录最后一次点击的歌曲位置
+				currentPosition = position;
+				menuWindow.lastSelectPosition = currentPosition;
+				menuWindow.adapter.notifyDataSetChanged();
+				playServices.startPlay(musicList.get(currentPosition));
+				isPlayed = false;
+				switchPlayOrPause();
+				initUI(currentPosition);
+			}
+		}, currentPosition, musicList);
 	}
 
 	private void init() {
@@ -98,14 +119,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		music_pause_paly.setOnClickListener(this);
 		music_list.setOnClickListener(this);
 
-		// music list popwindow data init
-		dataPri = DataPri.getInstance();
-
-		musicData = dataPri.getAudioList(MainActivity.this);
-
-
 	}
-
+	//init album animation
 	private void initAlbum() {
 		animator = ObjectAnimator.ofFloat(albumCD, "Rotation",
 				currentValue - 360, currentValue).setDuration(20000);
@@ -174,28 +189,15 @@ public class MainActivity extends Activity implements OnClickListener {
 		case R.id.music_pause:
 			switchPlayOrPause();
 			controlMusic();
-
 			break;
 
 		case R.id.music_list:
-			menuWindow = new MusicListPop(MainActivity.this,
-					new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> arg0,
-						View arg1, int position, long arg3) {
-
-					System.out.println("点击了没有");
-					//记录最后一次点击的歌曲位置
-					lastSelectPosition = position;
-				}
-			}, lastSelectPosition, musicData);
+			initPopWindow();
 			// 显示窗口
 			menuWindow.showAtLocation(
 					MainActivity.this.findViewById(R.id.main), Gravity.BOTTOM
 							| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
 			break;
-
 		default:
 			break;
 		}

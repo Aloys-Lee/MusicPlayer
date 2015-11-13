@@ -73,6 +73,7 @@ public class PlayServices extends Service implements OnCompletionListener {
 		mediaPlayer.reset();
         try {
 			mediaPlayer.setDataSource(mData.getPath());
+			mediaPlayer.prepareAsync();
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,7 +87,7 @@ public class PlayServices extends Service implements OnCompletionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        mediaPlayer.prepareAsync();
+        
         mediaPlayer.setOnPreparedListener(new PreparedListener());
         isFirstTime = false;
         isPause = false;

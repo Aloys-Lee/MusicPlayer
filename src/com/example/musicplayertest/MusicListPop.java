@@ -39,7 +39,7 @@ public class MusicListPop extends PopupWindow {
 
 	public BaseAdapter adapter;
 
-	private int lastSelectPosition;
+	public int lastSelectPosition;
 
 	public MusicListPop(Activity context1,
 			OnItemClickListener onItemClickListener1, int lastSelectPosition1,
