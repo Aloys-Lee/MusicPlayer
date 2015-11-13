@@ -351,12 +351,12 @@ public class MainActivity extends Activity implements OnClickListener {
 
 			String musicTitle = audioData.getTitle();
 			String musicArtist = " - " + audioData.getArtist();
-			Bitmap musicPic = dataPri.getArtwork(MainActivity.this, musicId,
-					albumId, true);
+			// Bitmap musicPic = dataPri.getArtwork(MainActivity.this, musicId,
+			// albumId, true);
 
 			viewHolder.itemName.setText(musicArtist);
 			viewHolder.itemtitle.setText(musicTitle);
-			viewHolder.itemImg.setImageBitmap(musicPic);
+//			viewHolder.itemImg.setImageBitmap(musicPic);
 
 			return convertView;
 		}
