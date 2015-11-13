@@ -16,6 +16,7 @@ import android.os.IBinder;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ import com.liushuan.MediaUtil.MediaUtil;
 import com.liushuan.MediaUtil.RoundImageView;
 
 public class MainActivity extends Activity implements OnClickListener {
-	private TextView music_name; // �����spinner���������滻��������
+	private TextView music_name; 
 	private ImageView music_pic;
 	private TextView music_singer;
 	private TextView music_record;
@@ -50,7 +51,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// requestWindowFeature(Window.FEATURE_NO_TITLE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		init();
