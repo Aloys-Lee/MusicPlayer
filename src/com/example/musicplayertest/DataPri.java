@@ -199,7 +199,7 @@ public class DataPri {
         BitmapFactory.Options opts = new BitmapFactory.Options();  
         opts.inPreferredConfig = Bitmap.Config.RGB_565;          
         return BitmapFactory.decodeStream(  
-                context.getResources().openRawResource(R.drawable.ic_launcher), null, opts);                 
+                context.getResources().openRawResource(R.drawable.music_album_default), null, opts);                 
     }  
 	/**
 	 * 私有数据查询类。主要用来查询数据。
