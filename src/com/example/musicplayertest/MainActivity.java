@@ -2,6 +2,7 @@ package com.example.musicplayertest;
 
 import java.util.List;
 
+import android.R.integer;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
@@ -58,6 +59,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private boolean isBound = false;
 	// music data
 	private List<AudioData> musicList;
+	private int currentPosition = 0;
 
 	private boolean isPlayed;// palying music
 
@@ -74,7 +76,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		getData();
 
 		// 初始化界面信息
-		initUI(0);
+		initUI(currentPosition);
 	}
 
 	private void init() {
@@ -130,22 +132,22 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void initUI(int i) {
 
-		music_name.setText(musicList.get(0).getTitle());
-		music_singer.setText(musicList.get(0).getArtist());
-		music_record.setText(musicList.get(0).getArtistKey());
+		music_name.setText(musicList.get(i).getTitle());
+		music_singer.setText(musicList.get(i).getArtist());
+		music_record.setText(musicList.get(i).getAlbum());
 
-		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(1).getId(),
-				musicList.get(1).getAlbumId(), false);
+		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(i).getId(),
+				musicList.get(i).getAlbumId(), false);
 		if (bm != null) {
 			albumpicture.setImageBitmap(bm);
 		} else {
-			Toast.makeText(
+			/*Toast.makeText(
 					MainActivity.this,
 					"bm = null" + musicList.size()
-							+ musicList.get(0).getTitle()
-							+ musicList.get(0).getTitle()
-							+ musicList.get(0).getAlbum(), Toast.LENGTH_SHORT)
-					.show();
+							+ musicList.get(i).getTitle()
+							+ musicList.get(i).getTitle()
+							+ musicList.get(i).getAlbum(), Toast.LENGTH_SHORT)
+					.show();*/
 		}
 
 	}
@@ -165,20 +167,14 @@ public class MainActivity extends Activity implements OnClickListener {
 			showMusicList();
 			break;
 		case R.id.music_pre:
-			Toast.makeText(this, "上", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, "上", Toast.LENGTH_SHORT).show();
 			switchToPre();
 			break;
 		case R.id.music_next:
-			Toast.makeText(this, "下", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, "下", Toast.LENGTH_SHORT).show();
 			switchToNext();
-
 			break;
 		case R.id.music_pause:
-
-			// test play music
-			if (musicList.size() > 0)
-				playServices.play(musicList.get(0));
-
 			switchPlayOrPause();
 			controlMusic();
 
@@ -207,25 +203,42 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void controlMusic() {
 		// TODO Auto-generated method stub
-
+		playServices.play(musicList.get(currentPosition));
 	}
 
 	private void switchToNext() {
 		// TODO Auto-generated method stub
 		// 停止播放
-		animator.end();
-		animator1.end();
-		currentValue = 0;
-
+		if(animator!=null){
+			animator.end();
+			animator1.end();
+			currentValue = 0;
+		}
+		currentPosition +=1;
+		if(currentPosition>musicList.size()-1)
+			currentPosition = 0;
+		playServices.startPlay(musicList.get(currentPosition));
+		initUI(currentPosition);
+		isPlayed = false;
+		switchPlayOrPause();
 	}
 
 	private void switchToPre() {
 		// TODO Auto-generated method stub
 
 		// 停止播放动画
-		animator.end();
-		animator1.end();
-		currentValue = 0;
+		if(animator!=null){
+			animator.end();
+			animator1.end();
+			currentValue = 0;
+		}
+		currentPosition -=1;
+		if(currentPosition<0)
+			currentPosition = musicList.size()-1;
+		playServices.startPlay(musicList.get(currentPosition));
+		initUI(currentPosition);
+		isPlayed = false;
+		switchPlayOrPause();
 	}
 
 	private void showMusicList() {
@@ -238,8 +251,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			isPlayed = false;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_play_press);
-			Toast.makeText(this, "暂停", Toast.LENGTH_SHORT).show();
-
 			animator.cancel();
 			animator1.cancel();
 
@@ -247,14 +258,10 @@ public class MainActivity extends Activity implements OnClickListener {
 			isPlayed = true;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_pause_press);
-			Toast.makeText(this, "开始", Toast.LENGTH_SHORT).show();
-
 			initAlbum();
 			animator.start();
 			animator1.start();
-
 		}
-
 	}
 
 	// bind service call back

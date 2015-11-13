@@ -15,6 +15,9 @@ public class PlayServices extends Service implements OnCompletionListener {
 	private final IBinder iBinder = new MusicBinder();
 	private MediaPlayer mediaPlayer;
 	
+	private boolean isFirstTime = true;
+	private boolean isPause = false;
+	
 	public class MusicBinder extends Binder{
 		public PlayServices getServices(){
 			return PlayServices.this;
@@ -51,9 +54,22 @@ public class PlayServices extends Service implements OnCompletionListener {
             mediaPlayer.release();
             mediaPlayer = null;
         }
+		isFirstTime = true;
 	}
 	
 	public void play(AudioData mData){
+		if(isFirstTime){
+			startPlay(mData);
+			isFirstTime = false;
+			isPause = false;
+		}else if(isPause){
+			resume();
+		}else {
+			pause();
+		}
+	}
+	
+	public void startPlay(AudioData mData){
 		mediaPlayer.reset();
         try {
 			mediaPlayer.setDataSource(mData.getPath());
@@ -72,7 +88,23 @@ public class PlayServices extends Service implements OnCompletionListener {
 		}
         mediaPlayer.prepareAsync();
         mediaPlayer.setOnPreparedListener(new PreparedListener());
+        isFirstTime = false;
+        isPause = false;
 	}
+	 //-继续播放
+    private void resume() {
+        if (isPause) {
+            mediaPlayer.start();
+            isPause = false;
+        }
+    }
+    //-暂停播放
+    private void pause() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            isPause = true;
+        }
+    }
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {
