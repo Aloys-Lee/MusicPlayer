@@ -3,6 +3,8 @@ package com.example.musicplayertest;
 import java.util.List;
 
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -59,7 +61,7 @@ public class MainActivity extends Activity implements OnClickListener {
         getData();
         
         //初始化界面信息
-        initUI();
+        initUI(0);
 	}
 
 	private void init() {
@@ -81,22 +83,37 @@ public class MainActivity extends Activity implements OnClickListener {
 		music_pre.setOnClickListener(this);
 		music_pause_paly.setOnClickListener(this);
 	}
-	private void initUI(){
+	
+	
+	private void initAlbum(){
+		animator = ObjectAnimator.ofFloat(albumCD, "Rotation", currentValue-360,currentValue).setDuration(20000);
+		animator.setRepeatCount(ObjectAnimator.INFINITE);
+		animator.setInterpolator(null);
 		
+		animator1 = ObjectAnimator.ofFloat(albumpicture, "Rotation", currentValue-360,currentValue).setDuration(20000);
+		animator1.setRepeatCount(ObjectAnimator.INFINITE);
+		animator1.setInterpolator(null);
 		
-//		animator = ObjectAnimator.ofFloat(imageView, "Rotation", currentValue-360,currentValue).setDuration(20000);
-//		animator.setRepeatCount(ObjectAnimator.INFINITE);
-//		animator.setInterpolator(null);
-//		
-//		animator1 = ObjectAnimator.ofFloat(infoOperatingIV, "Rotation", currentValue-360,currentValue).setDuration(20000);
-//		animator1.setRepeatCount(ObjectAnimator.INFINITE);
-//		animator1.setInterpolator(null);
+		animator.addUpdateListener(new AnimatorUpdateListener() {
+			
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				// TODO Auto-generated method stub
+				currentValue = (Float)animation.getAnimatedValue();
+			}
+		});	
+	}
+	private void initUI(int i){
 		
-		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(1).getId(), musicList.get(1).getAlbumId(), false, false);
+		music_name.setText(musicList.get(0).getTitle());
+		music_singer.setText(musicList.get(0).getArtist());
+		music_record.setText(musicList.get(0).getArtistKey());
+		
+		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(0).getId(), musicList.get(0).getAlbumId(), false, false);
 		if (bm != null){
 			albumpicture.setImageBitmap(bm);
 		}else{
-			Toast.makeText(MainActivity.this, "bm = null"+musicList.size()+musicList.get(1).getTitle()+musicList.get(1).getTitle()+musicList.get(1).getAlbum(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "bm = null"+musicList.size()+musicList.get(0).getTitle()+musicList.get(0).getTitle()+musicList.get(0).getAlbum(), Toast.LENGTH_SHORT).show();
 		}
 		
 	}
@@ -122,16 +139,17 @@ public class MainActivity extends Activity implements OnClickListener {
 		case R.id.music_next:
 			Toast.makeText(this, "�������һ��", Toast.LENGTH_SHORT).show();
 			switchToNext();
+			
 			break;
 		case R.id.music_pause:
-			//test play music
+			
+			//test play music	
 			if(musicList.size()>0)
 				playServices.play(musicList.get(0));
-			switchPlayOrPause();
-			controlMusic();
-			//展示CD并转动
-			
-			
+				
+				switchPlayOrPause();
+				controlMusic();
+				
 			
 			break;
 		default:
@@ -146,12 +164,21 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void switchToNext() {
 		// TODO Auto-generated method stub
-
+		//停止播放
+		animator.end();
+		animator1.end();
+		currentValue = 0;
+		
+		
 	}
 
 	private void switchToPre() {
 		// TODO Auto-generated method stub
-
+		
+		//停止播放动画
+		animator.end();
+		animator1.end();
+		currentValue = 0;
 	}
 
 	private void showMusicList() {
@@ -165,11 +192,20 @@ public class MainActivity extends Activity implements OnClickListener {
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_play_press);
 			Toast.makeText(this, "�������ͣ", Toast.LENGTH_SHORT).show();
+			
+			animator.cancel();
+			animator1.cancel();
+			
 		} else {
 			isPlayed = true;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_pause_press);
 			Toast.makeText(this, "����˲���", Toast.LENGTH_SHORT).show();
+			
+			initAlbum();
+			animator.start();
+			animator1.start();
+			
 		}
 
 	}
