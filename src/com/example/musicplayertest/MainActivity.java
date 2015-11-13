@@ -4,14 +4,15 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
-	private TextView music_name; // ×îºóÓÃspinner»òÕßÆäËûÌæ»»£¬ĞèÌÖÂÛ
+	private TextView music_name;
 	private ImageView music_pic;
+	private ImageButton music_list;
 	private TextView music_singer;
 	private TextView music_record;
 	private TextView music_cur_time;
@@ -41,11 +42,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		music_pre = (ImageView) findViewById(R.id.music_pre);
 		music_next = (ImageView) findViewById(R.id.music_next);
 		music_pause_paly = (ImageView) findViewById(R.id.music_pause);
+		music_list = (ImageButton) findViewById(R.id.music_list);
 
 		music_name.setOnClickListener(this);
 		music_next.setOnClickListener(this);
 		music_pre.setOnClickListener(this);
 		music_pause_paly.setOnClickListener(this);
+		music_list.setOnClickListener(this);
 	}
 
 	@Override
@@ -53,20 +56,23 @@ public class MainActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.music_name:
-			Toast.makeText(this, "µã»÷ÁË¸èÃû£¬ÏÔÊ¾¸èÇúÁĞ±í", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ç‚¹å‡»äº†æ­Œåï¼Œæ˜¾ç¤ºæ­Œæ›²åˆ—è¡¨", Toast.LENGTH_SHORT).show();
 			showMusicList();
 			break;
 		case R.id.music_pre:
-			Toast.makeText(this, "µã»÷ÁËÉÏÒ»Ê×", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ç‚¹å‡»äº†ä¸Šä¸€é¦–", Toast.LENGTH_SHORT).show();
 			switchToPre();
 			break;
 		case R.id.music_next:
-			Toast.makeText(this, "µã»÷ÁËÏÂÒ»Ê×", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ç‚¹å‡»äº†ä¸‹ä¸€é¦–", Toast.LENGTH_SHORT).show();
 			switchToNext();
 			break;
 		case R.id.music_pause:
 			switchPlayOrPause();
 			controlMusic();
+			break;
+		case R.id.music_list:
+			showMusicList();
 			break;
 
 		default:
@@ -74,37 +80,57 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	/**
+	 * @author lixi
+	 * æ§åˆ¶éŸ³ä¹æš‚åœæˆ–æ’­æ”¾
+	 */
 	private void controlMusic() {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * @author lixi
+	 * æ’­æ”¾ä¸‹ä¸€é¦–éŸ³ä¹
+	 */
 	private void switchToNext() {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * @author lixi
+	 * æ’­æ”¾ä¸Šä¸€é¦–éŸ³ä¹
+	 */
 	private void switchToPre() {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * @author lixi
+	 * æ’­æ”¾æˆ–æš‚åœæŒ‰é’®å›¾ç‰‡åˆ‡æ¢
+	 */
 	private void showMusicList() {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * @author lixi
+	 * æ’­æ”¾æˆ–æš‚åœæŒ‰é’®å›¾ç‰‡åˆ‡æ¢
+	 */
 	private void switchPlayOrPause() {
 		if (isPlayed) {
 			isPlayed = false;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_play_press);
-			Toast.makeText(this, "µã»÷ÁËÔİÍ£", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ç‚¹å‡»äº†æš‚åœ", Toast.LENGTH_SHORT).show();
 		} else {
 			isPlayed = true;
 			music_pause_paly
 					.setImageResource(R.drawable.widget_music_btn_pause_press);
-			Toast.makeText(this, "µã»÷ÁË²¥·Å", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "ç‚¹å‡»äº†æ’­æ”¾", Toast.LENGTH_SHORT).show();
 		}
 
 	}
