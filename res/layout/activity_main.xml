@@ -16,14 +16,33 @@
         android:gravity="center"
         android:text="@string/music_name" />
 
-    <ImageView
-        android:id="@+id/music_pic"
-        android:layout_width="@dimen/x160"
+ 		<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+      	>
+        
+        <ImageView
+        android:id="@+id/music_pic"  
+       	android:layout_width="@dimen/x160"
         android:layout_height="@dimen/y120"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/y15"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/widget_music_album_default" />
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/widget_music_album_default"
+        />
+        <com.liushuan.MediaUtil.RoundImageView
+        android:id="@+id/music_people"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="58dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher"
+         />
+         
+   		</RelativeLayout>
+    
+   
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -2,13 +2,16 @@ package com.example.musicplayertest;
 
 import java.util.List;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -16,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicplayertest.PlayServices.MusicBinder;
+import com.liushuan.MediaUtil.MediaUtil;
+import com.liushuan.MediaUtil.RoundImageView;
 
 public class MainActivity extends Activity implements OnClickListener {
 	private TextView music_name; // �����spinner���������滻��������
@@ -27,6 +32,12 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ImageView music_pre;
 	private ImageView music_next;
 	private ImageView music_pause_paly;
+	
+	private ImageView albumCD;
+	private RoundImageView albumpicture;
+	ObjectAnimator animator=null , animator1=null;
+	private float currentValue = 0f;
+	
 	//music service
 	private PlayServices playServices;
 	private boolean isBound = false;
@@ -46,6 +57,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		Intent intent = new Intent(this, PlayServices.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         getData();
+        
+        //初始化界面信息
+        initUI();
 	}
 
 	private void init() {
@@ -58,12 +72,35 @@ public class MainActivity extends Activity implements OnClickListener {
 		music_pre = (ImageView) findViewById(R.id.music_pre);
 		music_next = (ImageView) findViewById(R.id.music_next);
 		music_pause_paly = (ImageView) findViewById(R.id.music_pause);
-
+		
+		albumCD = (ImageView)findViewById(R.id.music_pic);
+		albumpicture = (RoundImageView)findViewById(R.id.music_people);
+		
 		music_name.setOnClickListener(this);
 		music_next.setOnClickListener(this);
 		music_pre.setOnClickListener(this);
 		music_pause_paly.setOnClickListener(this);
 	}
+	private void initUI(){
+		
+		
+//		animator = ObjectAnimator.ofFloat(imageView, "Rotation", currentValue-360,currentValue).setDuration(20000);
+//		animator.setRepeatCount(ObjectAnimator.INFINITE);
+//		animator.setInterpolator(null);
+//		
+//		animator1 = ObjectAnimator.ofFloat(infoOperatingIV, "Rotation", currentValue-360,currentValue).setDuration(20000);
+//		animator1.setRepeatCount(ObjectAnimator.INFINITE);
+//		animator1.setInterpolator(null);
+		
+		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(1).getId(), musicList.get(1).getAlbumId(), false, false);
+		if (bm != null){
+			albumpicture.setImageBitmap(bm);
+		}else{
+			Toast.makeText(MainActivity.this, "bm = null"+musicList.size()+musicList.get(1).getTitle()+musicList.get(1).getTitle()+musicList.get(1).getAlbum(), Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	
 	//get music data
 	private void getData(){
 		DataPri dataPri=DataPri.getInstance();
@@ -92,8 +129,11 @@ public class MainActivity extends Activity implements OnClickListener {
 				playServices.play(musicList.get(0));
 			switchPlayOrPause();
 			controlMusic();
+			//展示CD并转动
+			
+			
+			
 			break;
-
 		default:
 			break;
 		}
