@@ -215,6 +215,7 @@ public class DataPri {
 				MediaStore.Audio.Media.ARTIST_ID,
 				MediaStore.Audio.Media.ARTIST_KEY,
 				MediaStore.Audio.Media.COMPOSER,
+				MediaStore.Audio.Media.ALBUM,
 				MediaStore.Audio.Media.ALBUM_ID,
 				MediaStore.Audio.Media.ALBUM_KEY,
 				MediaStore.Audio.Media.DISPLAY_NAME,

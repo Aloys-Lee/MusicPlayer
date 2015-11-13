@@ -31,6 +31,8 @@ public class MusicListPop extends PopupWindow {
 
 	private TextView tvTitle;
 
+	private TextView tvMusicNums;
+
 	private BaseAdapter adapter;
 
 	public MusicListPop(Activity context1,
@@ -47,9 +49,15 @@ public class MusicListPop extends PopupWindow {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mMenuView = inflater.inflate(R.layout.music_list, null);
 
+		int musicNums = adapter1.getCount();
+
 		listView = (ListView) mMenuView.findViewById(R.id.list);
 
 		tvTitle = (TextView) mMenuView.findViewById(R.id.music_list_title);
+
+		tvMusicNums = (TextView) mMenuView.findViewById(R.id.music_list_nums);
+
+		tvMusicNums.setText("(" + musicNums + "首)");
 
 		listView.setAdapter(adapter);
 
@@ -63,7 +71,7 @@ public class MusicListPop extends PopupWindow {
 		this.setWidth(LayoutParams.MATCH_PARENT);
 		// 设置SelectPicPopupWindow弹出窗体的高
 		BaseTools baseTools = new BaseTools();
-		this.setHeight(baseTools.getWindowHeigh(context) * 4 / 9);
+		this.setHeight(baseTools.getWindowHeigh(context) * 2 / 3);
 		// 设置SelectPicPopupWindow弹出窗体可点击
 		this.setFocusable(true);
 		// 设置SelectPicPopupWindow弹出窗体动画效果

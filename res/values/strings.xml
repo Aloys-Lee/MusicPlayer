@@ -11,5 +11,5 @@
     <string name="record">专辑：</string>
     <string name="music_cur_time">03:33</string>
     <string name="music_end_time">03:42</string>
-
+	<string name="music_list">音乐播放列表</string>
 </resources>
