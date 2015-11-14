@@ -76,27 +76,8 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 	
 		// 初始化界面信息
 		initUI(currentPosition);
-		System.out.println("-----------------------on create");
 	}
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-		System.out.println("-----------------------on start");
-	}
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		System.out.println("-----------------------on resume");
-	}
-	
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-		System.out.println("-----------------------on stop");
-	}
+
 	
 	//init popwindow
 	public void initPopWindow(){
@@ -201,6 +182,10 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 	private void getData() {
 		DataPri dataPri = DataPri.getInstance();
 		musicList = dataPri.getAudioList(MainActivity.this);
+		if(musicList==null||musicList.size()<=0){
+			Toast.makeText(this, "no music found exit..", Toast.LENGTH_LONG).show();
+			finish();
+		}
 	}
 
 	@Override
@@ -323,6 +308,10 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if (isBound) {
+			unbindService(mConnection);
+			isBound = false;
+		}
 		System.out.println("-----------------------on destory");
 	}
 
@@ -379,10 +368,8 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
                     .setPositiveButton("退出",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                	if (isBound) {
-            			unbindService(mConnection);
-            			isBound = false;
-            		}
+                	handler.removeMessages(1);
+                	
                     finish();
                 }
             }).show();

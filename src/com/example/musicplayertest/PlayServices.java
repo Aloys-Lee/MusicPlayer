@@ -136,7 +136,8 @@ public class PlayServices extends Service implements OnCompletionListener {
 	}
 	
 	public void playCurrentTime(int currentTime){
-		mediaPlayer.seekTo(currentTime);
+		if(!isFirstTime)
+			mediaPlayer.seekTo(currentTime);
 	}
 	
 	public boolean isPlaying(){
