@@ -281,4 +281,28 @@ public class DataPri {
 			return audioList;
 		}
 	}
+	//format time
+	public static String formatTime(long time) {
+        String minute = time / 60000 + "";
+        String second = time % 60000 + "";
+        if (minute.length() < 2) {
+            minute = "0" + minute;
+        }
+        switch (second.length()) {
+            case 4:
+                second = "0" + second;
+                break;
+            case 3:
+                second = "00";
+                break;
+            case 2:
+                second = "00";
+                break;
+            case 1:
+                second = "00";
+                break;
+        }
+
+        return minute + ":" + second.trim().substring(0, 2);
+    }
 }

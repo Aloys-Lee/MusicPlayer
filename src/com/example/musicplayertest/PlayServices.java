@@ -14,6 +14,7 @@ public class PlayServices extends Service implements OnCompletionListener {
 	
 	private final IBinder iBinder = new MusicBinder();
 	private MediaPlayer mediaPlayer;
+	MusicPlayOver onMusicPlayOver;
 	
 	private boolean isFirstTime = true;
 	private boolean isPause = false;
@@ -110,7 +111,9 @@ public class PlayServices extends Service implements OnCompletionListener {
 	@Override
 	public void onCompletion(MediaPlayer mp) {
 		// TODO Auto-generated method stub
-		mp.start();
+		if(onMusicPlayOver!=null){
+     	   onMusicPlayOver.musicPlayOver();
+        }
 	}
 	
 	//prepare music
@@ -121,6 +124,24 @@ public class PlayServices extends Service implements OnCompletionListener {
             mp.start();
         }
     }
+	
+	//set call back 
+	public void setOnMusicPlayerOver(MusicPlayOver onMusicPlayOver){
+		this.onMusicPlayOver = onMusicPlayOver;
+	}
+	
+	//get current music time
+	public int getCurrentTime(){
+		return mediaPlayer.getCurrentPosition();
+	}
+	
+	public void playCurrentTime(int currentTime){
+		mediaPlayer.seekTo(currentTime);
+	}
+	
+	public boolean isPlaying(){
+		return mediaPlayer.isPlaying();
+	}
 	
 
 
