@@ -14,19 +14,25 @@
         <TextView
             android:id="@+id/music_name"
             style="@style/textTitle"
-            android:layout_width="@dimen/x200"
-            android:layout_height="@dimen/y30"
-            android:layout_centerHorizontal="true"
+            android:layout_width="@dimen/x180"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:text="@string/music_name" />
 
         <ImageButton
             android:id="@+id/music_list"
             android:layout_width="@dimen/x40"
             android:layout_height="@dimen/y30"
-            android:layout_marginLeft="@dimen/x10"
-            android:layout_toRightOf="@id/music_name"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x25"
             android:contentDescription="@string/app_name"
             android:gravity="center"
             android:scaleType="fitCenter"
@@ -44,8 +50,9 @@
             android:layout_width="@dimen/x200"
             android:layout_height="@dimen/y150"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/widget_music_album_default"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitCenter"
+            android:src="@drawable/widget_music_album_default" />
 
         <com.liushuan.MediaUtil.RoundImageView
             android:id="@+id/music_people"
