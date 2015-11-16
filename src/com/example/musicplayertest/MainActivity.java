@@ -235,6 +235,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		playServices.play(musicList.get(currentPosition));
 	}
 
+	int pos;
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void switchToNext() {
 		// TODO Auto-generated method stub
@@ -245,8 +247,16 @@ public class MainActivity extends Activity implements OnClickListener,
 			currentValue = 0;
 		}
 		currentPosition += 1;
+
+		if (currentPosition >= musicList.size())
+			pos = 0;
+		else
+			pos = currentPosition;
+
+		System.out.println("POS->" + pos);
+
 		if (menuWindow.isShowing()) {
-			menuWindow.lastSelectPosition = currentPosition;
+			menuWindow.lastSelectPosition = pos;
 			menuWindow.adapter.notifyDataSetChanged();
 		}
 		if (currentPosition > musicList.size() - 1)
