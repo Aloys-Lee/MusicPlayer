@@ -94,14 +94,14 @@ public class PlayServices extends Service implements OnCompletionListener {
         isPause = false;
 	}
 	 //-继续播放
-    private void resume() {
+    public void resume() {
         if (isPause) {
             mediaPlayer.start();
             isPause = false;
         }
     }
     //-暂停播放
-    private void pause() {
+    public void pause() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             isPause = true;

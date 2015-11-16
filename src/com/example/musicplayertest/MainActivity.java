@@ -5,15 +5,20 @@ import java.util.List;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -76,6 +81,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 	
 		// 初始化界面信息
 		initUI(currentPosition);
+		registerHeadsetPlugReceiver();
 	}
 
 	
@@ -84,6 +90,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		menuWindow = new MusicListPop(MainActivity.this,
 				new OnItemClickListener() {
 
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
 			public void onItemClick(AdapterView<?> arg0,
 					View arg1, int position, long arg3) {
@@ -227,6 +234,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		playServices.play(musicList.get(currentPosition));
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void switchToNext() {
 		// TODO Auto-generated method stub
 		// 停止播放
@@ -314,6 +322,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 			isBound = false;
 		}
 		System.out.println("-----------------------on destory");
+		unregisterReceiver();
 	}
 
 	@Override
@@ -341,6 +350,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 			}
 		};
 	};
+	private HeadsetPlugReceiver headsetPlugReceiver;
 	//onSeekBarChangeListener
 	private class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
         @Override
@@ -388,5 +398,52 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
     	switchPlayOrPause();
     }
 	
-
+    private class HeadsetPlugReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+                    int state = intent.getIntExtra("state", -1);
+                    switch (state) {
+                    case 0:
+                        //拔出耳机
+                    	if(playServices !=null){
+                    		playServices.pause();
+                    		isPlayed = true;
+                        	switchPlayOrPause();
+                    	}
+                        
+                        break;
+                    case 1:
+                        //插耳机自动播放
+                    	if(isPlayed)
+                    		break;
+                    	if(playServices != null){
+                        	playServices.resume();
+                        	isPlayed = false;
+                    		switchPlayOrPause();
+                    	}
+                        break;
+                    default:
+                        break;
+                    }
+ 
+                }
+//             //只监听拔出耳机
+//            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
+//            	if(playServices!=null){
+//            		playServices.pause();
+//                	switchPlayOrPause();
+//            	}
+//            }
+        }
+    }
+	private void registerHeadsetPlugReceiver(){  
+        headsetPlugReceiver  = new HeadsetPlugReceiver ();  
+        IntentFilter  filter = new IntentFilter();  
+        filter.addAction("android.intent.action.HEADSET_PLUG");  
+        registerReceiver(headsetPlugReceiver, filter);  
+    }  
+	private void unregisterReceiver(){  
+	    this.unregisterReceiver(headsetPlugReceiver);  
+	} 
 }
