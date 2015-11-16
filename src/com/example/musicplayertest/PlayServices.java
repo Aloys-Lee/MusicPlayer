@@ -141,6 +141,8 @@ public class PlayServices extends Service implements OnCompletionListener {
 	}
 	
 	public boolean isPlaying(){
+		if(mediaPlayer==null)
+			return false;
 		return mediaPlayer.isPlaying();
 	}
 	

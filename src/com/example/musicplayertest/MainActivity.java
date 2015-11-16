@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 	private RoundImageView albumpicture;
 	ObjectAnimator animator = null, animator1 = null;
 	private float currentValue = 0f;
-
+	Bitmap bm;
 	// music popwindow
 	private MusicListPop menuWindow;
 
@@ -162,7 +162,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		music_end_time.setText(DataPri.formatTime(mData.getDuration()));
 		musicSeekBar.setMax(mData.getDuration());
 
-		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(i).getId(),
+		bm = MediaUtil.getArtwork(this, musicList.get(i).getId(),
 				musicList.get(i).getAlbumId(), false);
 		if (bm != null) {
 			albumpicture.setImageBitmap(bm);
@@ -174,6 +174,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 							+ musicList.get(i).getTitle()
 							+ musicList.get(i).getAlbum(), Toast.LENGTH_SHORT)
 					.show();*/
+			albumpicture.setImageResource(R.drawable.defaultalbum);
 		}
 
 	}
@@ -241,11 +242,12 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		initUI(currentPosition);
 		isPlayed = false;
 		switchPlayOrPause();
+		bm = null;
 	}
 
 	private void switchToPre() {
 		// TODO Auto-generated method stub
-
+		
 		// 停止播放动画
 		if(animator!=null){
 			animator.end();
@@ -259,6 +261,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		initUI(currentPosition);
 		isPlayed = false;
 		switchPlayOrPause();
+		bm = null;
 	}
 
 	private void showMusicList() {
