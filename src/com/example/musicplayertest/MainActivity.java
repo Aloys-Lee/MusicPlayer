@@ -22,9 +22,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.view.ViewPager.LayoutParams;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -68,6 +71,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	private int currentPosition = 0;
 
 	private boolean isPlayed = false;// palying music
+	BaseTools baseTools;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +81,6 @@ public class MainActivity extends Activity implements OnClickListener,
 		// start service
 		Intent intent = new Intent(this, PlayServices.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
 		getData();
 		init();
 		initPopWindow();
@@ -88,6 +91,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	// init popwindow
 	public void initPopWindow() {
+		baseTools = new BaseTools();
 		menuWindow = new MusicListPop(MainActivity.this,
 				new OnItemClickListener() {
 
@@ -96,7 +100,11 @@ public class MainActivity extends Activity implements OnClickListener,
 					public void onItemClick(AdapterView<?> arg0, View arg1,
 							int position, long arg3) {
 
-						System.out.println("点击了没有");
+						int judge = MainActivity.this.getResources()
+								.getConfiguration().orientation;
+
+						System.out.println("judge-->" + judge);
+
 						// 记录最后一次点击的歌曲位置
 						currentPosition = position;
 						menuWindow.lastSelectPosition = currentPosition;
@@ -220,6 +228,10 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		case R.id.music_list:
 
+			int judge = MainActivity.this.getResources().getConfiguration().orientation;
+
+			changPop(judge);
+
 			// 显示窗口
 			menuWindow.showAtLocation(
 					MainActivity.this.findViewById(R.id.main), Gravity.BOTTOM
@@ -258,6 +270,31 @@ public class MainActivity extends Activity implements OnClickListener,
 		isPlayed = false;
 		switchPlayOrPause();
 		bm = null;
+	}
+
+	/**
+	 * 根据横屏或竖屏来初始化pop大小
+	 * 
+	 * @param judge
+	 *            true:shu false:heng
+	 */
+	public void changPop(int judge) {
+
+		if (judge == 1) {
+			menuWindow
+					.setHeight(baseTools.getWindowHeigh(MainActivity.this) * 2 / 3);
+
+			menuWindow.setWidth(LayoutParams.MATCH_PARENT);
+
+		} else {
+
+			menuWindow
+					.setHeight(baseTools.getWindowHeigh(MainActivity.this) * 2 / 3);
+
+			menuWindow.setWidth(LayoutParams.MATCH_PARENT);
+
+		}
+
 	}
 
 	private void switchToPre() {
@@ -469,4 +506,28 @@ public class MainActivity extends Activity implements OnClickListener,
 	private void unregisterReceiver() {
 		this.unregisterReceiver(headsetPlugReceiver);
 	}
+
+	public class BaseTools {
+		// 获取屏幕分辨率
+		public int getWindowWidth(Context context) {
+
+			WindowManager wm = (WindowManager) (context
+					.getSystemService(Context.WINDOW_SERVICE));
+			DisplayMetrics dm = new DisplayMetrics();
+			wm.getDefaultDisplay().getMetrics(dm);
+			int mScreenWidth = dm.widthPixels;
+			return mScreenWidth;
+		}
+
+		public int getWindowHeigh(Context context) {
+			// 获取屏幕分辨率
+			WindowManager wm = (WindowManager) (context
+					.getSystemService(Context.WINDOW_SERVICE));
+			DisplayMetrics dm = new DisplayMetrics();
+			wm.getDefaultDisplay().getMetrics(dm);
+			int mScreenHeigh = dm.heightPixels;
+			return mScreenHeigh;
+		}
+	}
+
 }
