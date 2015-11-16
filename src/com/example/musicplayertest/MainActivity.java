@@ -2,28 +2,30 @@ package com.example.musicplayertest;
 
 import java.util.List;
 
-import android.R.integer;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +33,7 @@ import com.example.musicplayertest.PlayServices.MusicBinder;
 import com.liushuan.MediaUtil.MediaUtil;
 import com.liushuan.MediaUtil.RoundImageView;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener  ,MusicPlayOver{
 	private TextView music_name;
 	private ImageView music_pic;
 	private TextView music_singer;
@@ -42,6 +44,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ImageView music_next;
 	private ImageView music_pause_paly;
 	private ImageView music_list;
+	private SeekBar musicSeekBar;
 
 	private ImageView albumCD;
 	private RoundImageView albumpicture;
@@ -58,23 +61,23 @@ public class MainActivity extends Activity implements OnClickListener {
 	private List<AudioData> musicList;
 	private int currentPosition = 0;
 
-	private boolean isPlayed;// palying music
+	private boolean isPlayed = false;// palying music
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
-		getData();
-		init();
-		isPlayed = false;
+		setContentView(R.layout.activity_main1);
 		// start service
 		Intent intent = new Intent(this, PlayServices.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
+		
+		getData();
+		init();
+	
 		// 初始化界面信息
 		initUI(currentPosition);
 	}
+
 	
 	//init popwindow
 	public void initPopWindow(){
@@ -91,9 +94,14 @@ public class MainActivity extends Activity implements OnClickListener {
 				menuWindow.lastSelectPosition = currentPosition;
 				menuWindow.adapter.notifyDataSetChanged();
 				playServices.startPlay(musicList.get(currentPosition));
+				if(animator!=null){
+					animator.end();
+					animator1.end();
+					currentValue = 0;
+				}
+				initUI(currentPosition);
 				isPlayed = false;
 				switchPlayOrPause();
-				initUI(currentPosition);
 			}
 		}, currentPosition, musicList);
 	}
@@ -112,6 +120,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		albumCD = (ImageView) findViewById(R.id.music_pic);
 		albumpicture = (RoundImageView) findViewById(R.id.music_people);
+		
+		//seek bar
+		musicSeekBar = (SeekBar) findViewById(R.id.music_seekBar);
+		musicSeekBar.setOnSeekBarChangeListener(new SeekBarChangeListener());
 
 		music_name.setOnClickListener(this);
 		music_next.setOnClickListener(this);
@@ -143,10 +155,12 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI(int i) {
-
-		music_name.setText(musicList.get(i).getTitle());
-		music_singer.setText(musicList.get(i).getArtist());
-		music_record.setText(musicList.get(i).getAlbum());
+		AudioData mData = musicList.get(i);
+		music_name.setText(mData.getTitle());
+		music_singer.setText(mData.getArtist());
+		music_record.setText(mData.getAlbum());
+		music_end_time.setText(DataPri.formatTime(mData.getDuration()));
+		musicSeekBar.setMax(mData.getDuration());
 
 		Bitmap bm = MediaUtil.getArtwork(this, musicList.get(i).getId(),
 				musicList.get(i).getAlbumId(), false);
@@ -168,6 +182,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void getData() {
 		DataPri dataPri = DataPri.getInstance();
 		musicList = dataPri.getAudioList(MainActivity.this);
+		if(musicList==null||musicList.size()<=0){
+			Toast.makeText(this, "no music found exit..", Toast.LENGTH_LONG).show();
+			finish();
+		}
 	}
 
 	@Override
@@ -187,8 +205,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			switchToNext();
 			break;
 		case R.id.music_pause:
-			switchPlayOrPause();
 			controlMusic();
+			switchPlayOrPause();
 			break;
 
 		case R.id.music_list:
@@ -252,18 +270,22 @@ public class MainActivity extends Activity implements OnClickListener {
 		if (isPlayed) {
 			isPlayed = false;
 			music_pause_paly
-					.setImageResource(R.drawable.widget_music_btn_play_press);
-			animator.cancel();
-			animator1.cancel();
+					.setImageResource(R.drawable.widget_play_normal);
+			if(animator!=null){
+				animator.cancel();
+				animator1.cancel();
+			}
+			
 
 		} else {
 			isPlayed = true;
 			music_pause_paly
-					.setImageResource(R.drawable.widget_music_btn_pause_press);
+					.setImageResource(R.drawable.widget_pause_normal);
 			initAlbum();
 			animator.start();
 			animator1.start();
 		}
+		handler.sendEmptyMessageDelayed(1,0);
 	}
 
 	// bind service call back
@@ -272,6 +294,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			MusicBinder binder = (MusicBinder) service;
 			playServices = binder.getServices();
+			playServices.setOnMusicPlayerOver(MainActivity.this);
 			isBound = true;
 			System.out.println(playServices.testConnection());
 		}
@@ -289,8 +312,80 @@ public class MainActivity extends Activity implements OnClickListener {
 			unbindService(mConnection);
 			isBound = false;
 		}
+		System.out.println("-----------------------on destory");
 	}
 
+	@Override
+	public void musicPlayOver() {
+		// TODO Auto-generated method stub
+		switchToNext();
+	}
+	
+	public void updateSeekBar(){
+		//music_cur_time
+		if(playServices!=null&&playServices.isPlaying()){
+			music_cur_time.setText(DataPri.formatTime(playServices.getCurrentTime()));
+			musicSeekBar.setProgress(playServices.getCurrentTime());
+		}
+	}
+	
+	//update seekbar
+	private Handler handler = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			switch(msg.what){
+			case 1:
+				updateSeekBar();
+				handler.sendEmptyMessageDelayed(1, 1000);
+				break;
+			}
+		};
+	};
+	//onSeekBarChangeListener
+	private class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        	handler.removeMessages(1);
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+        	playServices.playCurrentTime(seekBar.getProgress());
+        	handler.sendEmptyMessage(1);
+        }
+    }
+	
+	//按返回键提示框
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            new AlertDialog.Builder(this).setTitle("退出!").setMessage("你确定要退出吗?")
+                    .setNegativeButton("取消",null)
+                    .setPositiveButton("退出",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                	handler.removeMessages(1);
+                	
+                    finish();
+                }
+            }).show();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+    	super.onConfigurationChanged(newConfig);
+    	setContentView(R.layout.activity_main1);
+    	init();
+    	initUI(currentPosition);
+    	isPlayed = !playServices.isPlaying();
+    	switchPlayOrPause();
+    }
 	
 
 }
