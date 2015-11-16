@@ -15,25 +15,28 @@
         <TextView
             android:id="@+id/music_name"
             style="@style/textTitle"
-            android:singleLine="true"
-            android:layout_width="match_parent"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="60dp"
-            android:layout_marginLeft="60dp"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:text="@string/music_name" />
 
         <ImageButton
             android:id="@+id/music_list"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="3dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:contentDescription="@string/app_name"
-            android:scaleType="center"
             android:background="?android:selectableItemBackground"
+            android:contentDescription="@string/app_name"
+            android:padding="3dp"
+            android:scaleType="center"
             android:src="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha" />
     </RelativeLayout>
 
@@ -47,10 +50,11 @@
             android:id="@+id/music_pic"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:padding="5dp"
             android:layout_centerHorizontal="true"
             android:background="@drawable/widget_music_album_default"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"
+            android:padding="5dp"
+            android:scaleType="fitCenter" />
 
         <com.liushuan.MediaUtil.RoundImageView
             android:id="@+id/music_people"
@@ -64,9 +68,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:padding="10dp" >
 
         <TextView
             style="@style/textSmall"
@@ -139,26 +143,28 @@
             android:text="@string/music_end_time" />
     </LinearLayout>
 
-    <!-- <SeekBar
+    <!--
+         <SeekBar
         android:id="@+id/music_seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
-        android:gravity="center" /> -->
-        <SeekBar
-                android:id="@+id/music_seekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxHeight="3dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:progressDrawable="@drawable/seekbar_bg"
-                android:thumb="@drawable/thumb_bar"
-                android:layout_gravity="center_vertical"
-                />
+        android:gravity="center" />
+    -->
+
+    <SeekBar
+        android:id="@+id/music_seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
+        android:maxHeight="3dp"
+        android:progressDrawable="@drawable/seekbar_bg"
+        android:thumb="@drawable/thumb_bar" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -174,8 +180,8 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
-            android:contentDescription="@string/app_name"
             android:background="?android:selectableItemBackground"
+            android:contentDescription="@string/app_name"
             android:src="@drawable/widget_previous_normal" />
 
         <View
@@ -187,6 +193,7 @@
             android:id="@+id/music_pause"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:background="?android:selectableItemBackground"
             android:contentDescription="@string/app_name"
             android:src="@drawable/widget_play_normal" />
 
@@ -195,13 +202,13 @@
             android:layout_height="@dimen/y5"
             android:layout_weight="1" />
 
-       <ImageView
+        <ImageView
             android:id="@+id/music_next"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
-            android:contentDescription="@string/app_name"
             android:background="?android:selectableItemBackground"
+            android:contentDescription="@string/app_name"
             android:src="@drawable/widget_next_normal" />
     </LinearLayout>
 

@@ -13,21 +13,27 @@
         <TextView
             android:id="@+id/music_name"
             style="@style/textTitle"
-            android:layout_width="@dimen/y300"
-            android:layout_height="@dimen/x25"
-            android:layout_gravity="center"
+            android:layout_width="@dimen/y200"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:text="@string/music_name" />
 
         <ImageButton
             android:id="@+id/music_list"
             android:layout_width="@dimen/y30"
             android:layout_height="@dimen/x36"
-            android:layout_marginLeft="@dimen/x10"
-            android:layout_toRightOf="@id/music_name"
-            android:contentDescription="@string/app_name"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/y30"
             android:layout_centerInParent="true"
+            android:contentDescription="@string/app_name"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_music_list" />
     </RelativeLayout>
@@ -40,35 +46,28 @@
         android:layout_marginTop="@dimen/y5"
         android:orientation="horizontal" >
 
-        
- 
-        
-       
         <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/y40"
-      	>
-        
-        <ImageView
-        android:id="@+id/music_pic"  
-       	android:layout_width="@dimen/x120"
-        android:layout_height="@dimen/y90"  
-        android:contentDescription="@string/app_name"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/widget_music_album_default"
-        />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y40" >
 
-        <com.liushuan.MediaUtil.RoundImageView
-            android:id="@+id/music_people"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:scaleType="center"/>
-   		</RelativeLayout>
-        
-        
+            <ImageView
+                android:id="@+id/music_pic"
+                android:layout_width="@dimen/x120"
+                android:layout_height="@dimen/y90"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/app_name"
+                android:scaleType="fitCenter"
+                android:src="@drawable/widget_music_album_default" />
+
+            <com.liushuan.MediaUtil.RoundImageView
+                android:id="@+id/music_people"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:scaleType="center" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -134,8 +133,8 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/y10"
             android:paddingRight="@dimen/y10" >
