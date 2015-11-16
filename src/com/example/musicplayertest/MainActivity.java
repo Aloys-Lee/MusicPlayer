@@ -174,6 +174,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 							+ musicList.get(i).getTitle()
 							+ musicList.get(i).getAlbum(), Toast.LENGTH_SHORT)
 					.show();*/
+			bm = null;
 		}
 
 	}
