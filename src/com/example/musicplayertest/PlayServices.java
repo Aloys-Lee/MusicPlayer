@@ -122,6 +122,7 @@ public class PlayServices extends Service implements OnCompletionListener {
         @Override
         public void onPrepared(MediaPlayer mp) {
             mp.start();
+            
         }
     }
 	
@@ -141,6 +142,8 @@ public class PlayServices extends Service implements OnCompletionListener {
 	}
 	
 	public boolean isPlaying(){
+		if(mediaPlayer==null)
+			return false;
 		return mediaPlayer.isPlaying();
 	}
 	
