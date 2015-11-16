@@ -261,10 +261,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		if (currentPosition > musicList.size() - 1)
 			currentPosition = 0;
 
-		if (menuWindow.isShowing()) {
-			menuWindow.lastSelectPosition = currentPosition;
-			menuWindow.adapter.notifyDataSetChanged();
-		}
+		menuWindow.lastSelectPosition = currentPosition;
+		menuWindow.adapter.notifyDataSetChanged();
 		playServices.startPlay(musicList.get(currentPosition));
 		initUI(currentPosition);
 		isPlayed = false;
@@ -307,12 +305,11 @@ public class MainActivity extends Activity implements OnClickListener,
 			currentValue = 0;
 		}
 		currentPosition -= 1;
-		if (menuWindow.isShowing()) {
-			menuWindow.lastSelectPosition = currentPosition;
-			menuWindow.adapter.notifyDataSetChanged();
-		}
+
 		if (currentPosition < 0)
 			currentPosition = musicList.size() - 1;
+		menuWindow.lastSelectPosition = currentPosition;
+		menuWindow.adapter.notifyDataSetChanged();
 		playServices.startPlay(musicList.get(currentPosition));
 		initUI(currentPosition);
 		isPlayed = false;
