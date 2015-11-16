@@ -38,7 +38,8 @@ import com.example.musicplayertest.PlayServices.MusicBinder;
 import com.liushuan.MediaUtil.MediaUtil;
 import com.liushuan.MediaUtil.RoundImageView;
 
-public class MainActivity extends Activity implements OnClickListener  ,MusicPlayOver{
+public class MainActivity extends Activity implements OnClickListener,
+		MusicPlayOver {
 	private TextView music_name;
 	private ImageView music_pic;
 	private TextView music_singer;
@@ -67,6 +68,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 	private int currentPosition = 0;
 
 	private boolean isPlayed = false;// palying music
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -75,42 +77,41 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		// start service
 		Intent intent = new Intent(this, PlayServices.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-		
+
 		getData();
 		init();
-	
+		initPopWindow();
 		// 初始化界面信息
 		initUI(currentPosition);
 		registerHeadsetPlugReceiver();
 	}
 
-	
-	//init popwindow
-	public void initPopWindow(){
+	// init popwindow
+	public void initPopWindow() {
 		menuWindow = new MusicListPop(MainActivity.this,
 				new OnItemClickListener() {
 
-			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-			@Override
-			public void onItemClick(AdapterView<?> arg0,
-					View arg1, int position, long arg3) {
+					@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int position, long arg3) {
 
-				System.out.println("点击了没有");
-				//记录最后一次点击的歌曲位置
-				currentPosition = position;
-				menuWindow.lastSelectPosition = currentPosition;
-				menuWindow.adapter.notifyDataSetChanged();
-				playServices.startPlay(musicList.get(currentPosition));
-				if(animator!=null){
-					animator.end();
-					animator1.end();
-					currentValue = 0;
-				}
-				initUI(currentPosition);
-				isPlayed = false;
-				switchPlayOrPause();
-			}
-		}, currentPosition, musicList);
+						System.out.println("点击了没有");
+						// 记录最后一次点击的歌曲位置
+						currentPosition = position;
+						menuWindow.lastSelectPosition = currentPosition;
+						menuWindow.adapter.notifyDataSetChanged();
+						playServices.startPlay(musicList.get(currentPosition));
+						if (animator != null) {
+							animator.end();
+							animator1.end();
+							currentValue = 0;
+						}
+						initUI(currentPosition);
+						isPlayed = false;
+						switchPlayOrPause();
+					}
+				}, currentPosition, musicList);
 	}
 
 	private void init() {
@@ -127,8 +128,8 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 
 		albumCD = (ImageView) findViewById(R.id.music_pic);
 		albumpicture = (RoundImageView) findViewById(R.id.music_people);
-		
-		//seek bar
+
+		// seek bar
 		musicSeekBar = (SeekBar) findViewById(R.id.music_seekBar);
 		musicSeekBar.setOnSeekBarChangeListener(new SeekBarChangeListener());
 
@@ -139,7 +140,8 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		music_list.setOnClickListener(this);
 
 	}
-	//init album animation
+
+	// init album animation
 	private void initAlbum() {
 		animator = ObjectAnimator.ofFloat(albumCD, "Rotation",
 				currentValue - 360, currentValue).setDuration(20000);
@@ -169,18 +171,16 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		music_end_time.setText(DataPri.formatTime(mData.getDuration()));
 		musicSeekBar.setMax(mData.getDuration());
 
-		bm = MediaUtil.getArtwork(this, musicList.get(i).getId(),
-				musicList.get(i).getAlbumId(), false);
+		bm = MediaUtil.getArtwork(this, musicList.get(i).getId(), musicList
+				.get(i).getAlbumId(), false);
 		if (bm != null) {
 			albumpicture.setImageBitmap(bm);
 		} else {
-			/*Toast.makeText(
-					MainActivity.this,
-					"bm = null" + musicList.size()
-							+ musicList.get(i).getTitle()
-							+ musicList.get(i).getTitle()
-							+ musicList.get(i).getAlbum(), Toast.LENGTH_SHORT)
-					.show();*/
+			/*
+			 * Toast.makeText( MainActivity.this, "bm = null" + musicList.size()
+			 * + musicList.get(i).getTitle() + musicList.get(i).getTitle() +
+			 * musicList.get(i).getAlbum(), Toast.LENGTH_SHORT) .show();
+			 */
 			albumpicture.setImageResource(R.drawable.defaultalbum);
 		}
 
@@ -190,8 +190,9 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 	private void getData() {
 		DataPri dataPri = DataPri.getInstance();
 		musicList = dataPri.getAudioList(MainActivity.this);
-		if(musicList==null||musicList.size()<=0){
-			Toast.makeText(this, "no music found exit..", Toast.LENGTH_LONG).show();
+		if (musicList == null || musicList.size() <= 0) {
+			Toast.makeText(this, "no music found exit..", Toast.LENGTH_LONG)
+					.show();
 			finish();
 		}
 	}
@@ -205,11 +206,11 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 			showMusicList();
 			break;
 		case R.id.music_pre:
-			//Toast.makeText(this, "上", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "上", Toast.LENGTH_SHORT).show();
 			switchToPre();
 			break;
 		case R.id.music_next:
-			//Toast.makeText(this, "下", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "下", Toast.LENGTH_SHORT).show();
 			switchToNext();
 			break;
 		case R.id.music_pause:
@@ -218,7 +219,7 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 			break;
 
 		case R.id.music_list:
-			initPopWindow();
+
 			// 显示窗口
 			menuWindow.showAtLocation(
 					MainActivity.this.findViewById(R.id.main), Gravity.BOTTOM
@@ -238,13 +239,17 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 	private void switchToNext() {
 		// TODO Auto-generated method stub
 		// 停止播放
-		if(animator!=null){
+		if (animator != null) {
 			animator.end();
 			animator1.end();
 			currentValue = 0;
 		}
-		currentPosition +=1;
-		if(currentPosition>musicList.size()-1)
+		currentPosition += 1;
+		if (menuWindow.isShowing()) {
+			menuWindow.lastSelectPosition = currentPosition;
+			menuWindow.adapter.notifyDataSetChanged();
+		}
+		if (currentPosition > musicList.size() - 1)
 			currentPosition = 0;
 		playServices.startPlay(musicList.get(currentPosition));
 		initUI(currentPosition);
@@ -255,16 +260,20 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 
 	private void switchToPre() {
 		// TODO Auto-generated method stub
-		
+
 		// 停止播放动画
-		if(animator!=null){
+		if (animator != null) {
 			animator.end();
 			animator1.end();
 			currentValue = 0;
 		}
-		currentPosition -=1;
-		if(currentPosition<0)
-			currentPosition = musicList.size()-1;
+		currentPosition -= 1;
+		if (menuWindow.isShowing()) {
+			menuWindow.lastSelectPosition = currentPosition;
+			menuWindow.adapter.notifyDataSetChanged();
+		}
+		if (currentPosition < 0)
+			currentPosition = musicList.size() - 1;
 		playServices.startPlay(musicList.get(currentPosition));
 		initUI(currentPosition);
 		isPlayed = false;
@@ -280,23 +289,20 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 	private void switchPlayOrPause() {
 		if (isPlayed) {
 			isPlayed = false;
-			music_pause_paly
-					.setImageResource(R.drawable.widget_play_normal);
-			if(animator!=null){
+			music_pause_paly.setImageResource(R.drawable.widget_play_normal);
+			if (animator != null) {
 				animator.cancel();
 				animator1.cancel();
 			}
-			
 
 		} else {
 			isPlayed = true;
-			music_pause_paly
-					.setImageResource(R.drawable.widget_pause_normal);
+			music_pause_paly.setImageResource(R.drawable.widget_pause_normal);
 			initAlbum();
 			animator.start();
 			animator1.start();
 		}
-		handler.sendEmptyMessageDelayed(1,0);
+		handler.sendEmptyMessageDelayed(1, 0);
 	}
 
 	// bind service call back
@@ -332,19 +338,20 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		// TODO Auto-generated method stub
 		switchToNext();
 	}
-	
-	public void updateSeekBar(){
-		//music_cur_time
-		if(playServices!=null&&playServices.isPlaying()){
-			music_cur_time.setText(DataPri.formatTime(playServices.getCurrentTime()));
+
+	public void updateSeekBar() {
+		// music_cur_time
+		if (playServices != null && playServices.isPlaying()) {
+			music_cur_time.setText(DataPri.formatTime(playServices
+					.getCurrentTime()));
 			musicSeekBar.setProgress(playServices.getCurrentTime());
 		}
 	}
-	
-	//update seekbar
-	private Handler handler = new Handler(){
+
+	// update seekbar
+	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			switch(msg.what){
+			switch (msg.what) {
 			case 1:
 				updateSeekBar();
 				handler.sendEmptyMessageDelayed(1, 1000);
@@ -353,99 +360,111 @@ public class MainActivity extends Activity implements OnClickListener  ,MusicPla
 		};
 	};
 	private HeadsetPlugReceiver headsetPlugReceiver;
-	//onSeekBarChangeListener
-	private class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-        }
+	// onSeekBarChangeListener
+	private class SeekBarChangeListener implements
+			SeekBar.OnSeekBarChangeListener {
+		@Override
+		public void onProgressChanged(SeekBar seekBar, int progress,
+				boolean fromUser) {
 
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        	handler.removeMessages(1);
-        }
+		}
 
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-        	playServices.playCurrentTime(seekBar.getProgress());
-        	handler.sendEmptyMessage(1);
-        }
-    }
-	
-	//按返回键提示框
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            new AlertDialog.Builder(this).setTitle("退出!").setMessage("你确定要退出吗?")
-                    .setNegativeButton("取消",null)
-                    .setPositiveButton("退出",new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                	handler.removeMessages(1);
-                	
-                    finish();
-                }
-            }).show();
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+		@Override
+		public void onStartTrackingTouch(SeekBar seekBar) {
+			handler.removeMessages(1);
+		}
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-    	super.onConfigurationChanged(newConfig);
-    	setContentView(R.layout.activity_main1);
-    	init();
-    	initUI(currentPosition);
-    	isPlayed = !playServices.isPlaying();
-    	switchPlayOrPause();
-    }
-	
-    private class HeadsetPlugReceiver extends BroadcastReceiver{
-        @Override
-        public void onReceive(Context context, Intent intent) {
-             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
-                    int state = intent.getIntExtra("state", -1);
-                    switch (state) {
-                    case 0:
-                        //拔出耳机
-                    	if(playServices !=null){
-                    		playServices.pause();
-                    		isPlayed = true;
-                        	switchPlayOrPause();
-                    	}
-                        
-                        break;
-                    case 1:
-                        //插耳机自动播放
-                    	if(isPlayed)
-                    		break;
-                    	if(playServices != null){
-                        	playServices.resume();
-                        	isPlayed = false;
-                    		switchPlayOrPause();
-                    	}
-                        break;
-                    default:
-                        break;
-                    }
- 
-                }
-//             //只监听拔出耳机
-//            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
-//            	if(playServices!=null){
-//            		playServices.pause();
-//                	switchPlayOrPause();
-//            	}
-//            }
-        }
-    }
-	private void registerHeadsetPlugReceiver(){  
-        headsetPlugReceiver  = new HeadsetPlugReceiver ();  
-        IntentFilter  filter = new IntentFilter();  
-        filter.addAction("android.intent.action.HEADSET_PLUG");  
-        registerReceiver(headsetPlugReceiver, filter);  
-    }  
-	private void unregisterReceiver(){  
-	    this.unregisterReceiver(headsetPlugReceiver);  
-	} 
+		@Override
+		public void onStopTrackingTouch(SeekBar seekBar) {
+			playServices.playCurrentTime(seekBar.getProgress());
+			handler.sendEmptyMessage(1);
+		}
+	}
+
+	// 按返回键提示框
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK
+				&& event.getAction() == KeyEvent.ACTION_DOWN) {
+			new AlertDialog.Builder(this)
+					.setTitle("退出!")
+					.setMessage("你确定要退出吗?")
+					.setNegativeButton("取消", null)
+					.setPositiveButton("退出",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									handler.removeMessages(1);
+
+									finish();
+								}
+							}).show();
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		setContentView(R.layout.activity_main1);
+		init();
+		initUI(currentPosition);
+		isPlayed = !playServices.isPlaying();
+		switchPlayOrPause();
+	}
+
+	private class HeadsetPlugReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+				int state = intent.getIntExtra("state", -1);
+				switch (state) {
+				case 0:
+					// 拔出耳机
+					if (playServices != null) {
+						playServices.pause();
+						isPlayed = true;
+						switchPlayOrPause();
+					}
+
+					break;
+				case 1:
+					// 插耳机自动播放
+					if (isPlayed)
+						break;
+					if (playServices != null) {
+						playServices.resume();
+						isPlayed = false;
+						switchPlayOrPause();
+					}
+					break;
+				default:
+					break;
+				}
+
+			}
+			// //只监听拔出耳机
+			// if
+			// (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction()))
+			// {
+			// if(playServices!=null){
+			// playServices.pause();
+			// switchPlayOrPause();
+			// }
+			// }
+		}
+	}
+
+	private void registerHeadsetPlugReceiver() {
+		headsetPlugReceiver = new HeadsetPlugReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("android.intent.action.HEADSET_PLUG");
+		registerReceiver(headsetPlugReceiver, filter);
+	}
+
+	private void unregisterReceiver() {
+		this.unregisterReceiver(headsetPlugReceiver);
+	}
 }
